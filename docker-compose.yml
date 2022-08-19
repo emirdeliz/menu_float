@@ -1,0 +1,18 @@
+version: '3.2'
+services:
+  menu_float_docker:
+    platform: linux/arm64
+    image: emirdeliz/gitlab-ci-flutter
+    ports:
+      - 4002:4002
+      - 35729:35729
+      - 9191:9191
+    stdin_open: true
+    ipc: host
+    volumes:
+      - appcode-unison-sync:/home/docker/apps:nocopy
+
+volumes:
+  appcode-unison-sync:
+    external:
+      name: appcode-unison-rsync-sync

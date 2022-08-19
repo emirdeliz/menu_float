@@ -1,0 +1,34 @@
+{
+    "sourceFile": ".vscode/launch.json",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 4,
+            "patches": [
+                {
+                    "date": 1660930350984,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1660930365622,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,18 +3,24 @@\n     // Hover to view descriptions of existing attributes.\n     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387\n     \"version\": \"0.2.0\",\n     \"configurations\": [\n-        {\n-\t\t\t\"name\": \"Menu Float Docker\",\n-\t\t\t\"cwd\": \"menu_float\",\n-\t\t\t\"request\": \"launch\",\n-\t\t\t\"type\": \"dart\",\n-\t\t\t\"args\": [\n-\t\t\t\t\"--web-port=9191\",\n-\t\t\t\t\"--web-hostname=0.0.0.0\",\n-\t\t\t\t\"--hot\",\n-\t\t\t],\n-\t\t\t\"program\": \"lib/demo/menu_float_demo.dart\"\n-\t\t}\n-    ]\n+\t\t\t{\n+\t\t\t\t\"name\": \"Menu Float Docker\",\n+\t\t\t\t\"cwd\": \"menu_float\",\n+\t\t\t\t\"request\": \"launch\",\n+\t\t\t\t\"type\": \"dart\",\n+\t\t\t\t\"args\": [\n+\t\t\t\t\t\"--web-port=9191\",\n+\t\t\t\t\t\"--web-hostname=0.0.0.0\",\n+\t\t\t\t\t\"--hot\"\n+\t\t\t\t],\n+\t\t\t\t\"program\": \"lib/demo/menu_float_demo.dart\"\n+\t\t\t},\n+\t\t\t{\n+\t\t\t\t\"name\": \"Flutter (lib/demo/menu_float_demo.dart)\",\n+\t\t\t\t\"type\": \"dart\",\n+\t\t\t\t\"request\": \"launch\",\n+\t\t\t\t\"program\": \"lib/demo/menu_float_demo.dart\"\n+\t\t\t}\n+\t\t]\n }\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1660930379682,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,24 +3,18 @@\n     // Hover to view descriptions of existing attributes.\n     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387\n     \"version\": \"0.2.0\",\n     \"configurations\": [\n-\t\t\t{\n-\t\t\t\t\"name\": \"Menu Float Docker\",\n-\t\t\t\t\"cwd\": \"menu_float\",\n-\t\t\t\t\"request\": \"launch\",\n-\t\t\t\t\"type\": \"dart\",\n-\t\t\t\t\"args\": [\n-\t\t\t\t\t\"--web-port=9191\",\n-\t\t\t\t\t\"--web-hostname=0.0.0.0\",\n-\t\t\t\t\t\"--hot\"\n-\t\t\t\t],\n-\t\t\t\t\"program\": \"lib/demo/menu_float_demo.dart\"\n-\t\t\t},\n-\t\t\t{\n-\t\t\t\t\"name\": \"Flutter (lib/demo/menu_float_demo.dart)\",\n-\t\t\t\t\"type\": \"dart\",\n-\t\t\t\t\"request\": \"launch\",\n-\t\t\t\t\"program\": \"lib/demo/menu_float_demo.dart\"\n-\t\t\t}\n-\t\t]\n+        {\n+\t\t\t\"name\": \"Menu Float Docker\",\n+\t\t\t\"cwd\": \"menu_float\",\n+\t\t\t\"request\": \"launch\",\n+\t\t\t\"type\": \"dart\",\n+\t\t\t\"args\": [\n+\t\t\t\t\"--web-port=9191\",\n+\t\t\t\t\"--web-hostname=0.0.0.0\",\n+\t\t\t\t\"--hot\",\n+\t\t\t],\n+\t\t\t\"program\": \"lib/demo/menu_float_demo.dart\"\n+\t\t}\n+    ]\n }\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1660930385564,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,17 +4,17 @@\n     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387\n     \"version\": \"0.2.0\",\n     \"configurations\": [\n         {\n-\t\t\t\"name\": \"Menu Float Docker\",\n-\t\t\t\"cwd\": \"menu_float\",\n-\t\t\t\"request\": \"launch\",\n-\t\t\t\"type\": \"dart\",\n-\t\t\t\"args\": [\n-\t\t\t\t\"--web-port=9191\",\n-\t\t\t\t\"--web-hostname=0.0.0.0\",\n-\t\t\t\t\"--hot\",\n-\t\t\t],\n-\t\t\t\"program\": \"lib/demo/menu_float_demo.dart\"\n-\t\t}\n+\t\t\t\t\"name\": \"Menu Float Docker\",\n+\t\t\t\t\"cwd\": \"menu_float\",\n+\t\t\t\t\"request\": \"launch\",\n+\t\t\t\t\"type\": \"dart\",\n+\t\t\t\t\"args\": [\n+\t\t\t\t\t\"--web-port=9191\",\n+\t\t\t\t\t\"--web-hostname=0.0.0.0\",\n+\t\t\t\t\t\"--hot\",\n+\t\t\t\t],\n+\t\t\t\t\"program\": \"lib/demo/menu_float_demo.dart\"\n+\t\t\t}\n     ]\n }\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1660930419930,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,8 @@\n     \"version\": \"0.2.0\",\n     \"configurations\": [\n         {\n \t\t\t\t\"name\": \"Menu Float Docker\",\n-\t\t\t\t\"cwd\": \"menu_float\",\n \t\t\t\t\"request\": \"launch\",\n \t\t\t\t\"type\": \"dart\",\n \t\t\t\t\"args\": [\n \t\t\t\t\t\"--web-port=9191\",\n"
+                }
+            ],
+            "date": 1660930350984,
+            "name": "Commit-0",
+            "content": "{\n    // Use IntelliSense to learn about possible attributes.\n    // Hover to view descriptions of existing attributes.\n    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387\n    \"version\": \"0.2.0\",\n    \"configurations\": [\n        {\n\t\t\t\"name\": \"Menu Float Docker\",\n\t\t\t\"cwd\": \"menu_float\",\n\t\t\t\"request\": \"launch\",\n\t\t\t\"type\": \"dart\",\n\t\t\t\"args\": [\n\t\t\t\t\"--web-port=9191\",\n\t\t\t\t\"--web-hostname=0.0.0.0\",\n\t\t\t\t\"--hot\",\n\t\t\t],\n\t\t\t\"program\": \"lib/demo/menu_float_demo.dart\"\n\t\t}\n    ]\n}"
+        }
+    ]
+}
