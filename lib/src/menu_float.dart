@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:menu_float/src/widgets/menu_float_item/menu_float_item.dart';
+import 'package:menu_float/src/menu_float_item.dart';
 
 const double menuFloatWidthDefault = 300;
 const double menuFloatHeightDefault = 300;
@@ -111,7 +111,12 @@ class _MenuFloatState<T> extends State<MenuFloat>
 
   List<Widget> buildMenuFloatItems() {
     List<MenuFloatItem<T>> items = widget.items.map((e) {
-      return MenuFloatItem<T>(option: e);
+      return MenuFloatItem<T>(
+        option: e.value,
+        onClick: (T v) {
+          print(e.label);
+        },
+      );
     }).toList();
     return items;
   }
@@ -168,7 +173,7 @@ class _MenuFloatState<T> extends State<MenuFloat>
   void hideMenu() {
     hasFocus = false;
     Future.delayed(const Duration(milliseconds: 500)).then((value) {
-      if (!hasFocus && entry != null) {
+      if (!hasFocus && entry != null && entry!.mounted) {
         entry?.remove();
       }
     });
@@ -178,10 +183,10 @@ class _MenuFloatState<T> extends State<MenuFloat>
     hasFocus = true;
   }
 
-  @override
-  void didUpdateWidget(covariant MenuFloat oldWidget) {
-    super.didUpdateWidget(oldWidget);
-  }
+  // @override
+  // void didUpdateWidget(covariant MenuFloat oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  // }
 
   @override
   void initState() {

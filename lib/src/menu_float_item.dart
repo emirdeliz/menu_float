@@ -4,21 +4,23 @@ class MenuFloatOption<T> {
   final String label;
   final T value;
 
-  MenuFloatOption(this.label, this.value);
+  MenuFloatOption({required this.label, required this.value});
 }
 
 class MenuFloatItem<T> extends StatelessWidget {
-  final T item;
-  final String label;
+  final MenuFloatOption<T> option;
+  final void Function(T)? onClick;
 
-  const MenuFloatItem({Key? key, required this.item, required this.label})
+  const MenuFloatItem({Key? key, required this.option, this.onClick})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          print('CLICK!!!');
+          if (onClick != null) {
+            onClick!(option.value);
+          }
         },
         child: MouseRegion(
             cursor: SystemMouseCursors.click,
@@ -28,7 +30,7 @@ class MenuFloatItem<T> extends StatelessWidget {
               color: Colors.white,
               // decoration: BoxDecoration(
               //     color: Colors.white, border: Border.all(color: Colors.red)),
-              child: Text(label,
+              child: Text(option.label,
                   style: const TextStyle(color: Colors.black, fontSize: 12)),
             )));
   }
