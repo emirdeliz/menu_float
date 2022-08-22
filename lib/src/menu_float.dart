@@ -12,6 +12,13 @@ class MenuFloatPosition {
   MenuFloatPosition({required this.top, required this.left});
 }
 
+class MenuFloatIdealPosition extends MenuFloatPosition {
+  double width;
+  double height;
+  MenuFloatIdealPosition({top, left, required this.width, required this.height})
+      : super(top: top, left: left);
+}
+
 class MenuFloat<T> extends StatefulWidget {
   final Widget child;
   final String title;
@@ -34,19 +41,11 @@ class MenuFloat<T> extends StatefulWidget {
   State<MenuFloat> createState() => _MenuFloatState<T>();
 }
 
-class MenuFloatIdealPosition extends MenuFloatPosition {
-  double width;
-  double height;
-  MenuFloatIdealPosition({top, left, required this.width, required this.height})
-      : super(top: top, left: left);
-}
-
-class _MenuFloatState<T> extends State<MenuFloat>
+class _MenuFloatState<T> extends State<MenuFloat<T>>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _expandAnimation;
   late GlobalKey mouseRegionKey = GlobalKey();
-  late GlobalKey menuFloatRegionKey = GlobalKey();
 
   bool hasFocus = false;
   OverlayEntry? entry;
@@ -82,13 +81,12 @@ class _MenuFloatState<T> extends State<MenuFloat>
       style.left =
           mouseRegionPositionSize.left - (mouseRegionPositionSize.width * 2);
       style.top = mouseRegionPositionSize.top -
-          (menuFloatHeightDefault - mouseRegionPositionSize.height * 2) +
+          (menuFloatHeightDefault - mouseRegionPositionSize.height) +
           offset;
     } else {
       style.left =
           mouseRegionPositionSize.left - (mouseRegionPositionSize.width * 2);
-      style.top =
-          mouseRegionPositionSize.top - mouseRegionPositionSize.height - offset;
+      style.top = mouseRegionPositionSize.top;
     }
 
     final offsetWidth = MediaQuery.of(context).size.width;
@@ -109,12 +107,15 @@ class _MenuFloatState<T> extends State<MenuFloat>
     return style;
   }
 
-  List<Widget> buildMenuFloatItems() {
-    List<MenuFloatItem<T>> items = widget.items.map((e) {
-      return MenuFloatItem<T>(
-        option: e.value,
-        onClick: (T v) {
-          print(e.label);
+  List<ListTile> buildMenuFloatItems() {
+    List<ListTile> items = widget.items.map((e) {
+      final onClick = e.onClick;
+      return ListTile(
+        title: MenuFloatItem<T>(option: e),
+        onTap: () {
+          if (onClick != null) {
+            onClick(e.value);
+          }
         },
       );
     }).toList();
@@ -135,35 +136,42 @@ class _MenuFloatState<T> extends State<MenuFloat>
             alignment: Alignment.centerLeft,
             clipBehavior: Clip.none,
             children: [
-              Positioned.fromRect(
-                  rect: Rect.fromLTWH(style.left, style.top,
-                      menuFloatWidthDefault, menuFloatHeightDefault),
+              Positioned(
+                  left: style.left,
+                  top: style.top,
+                  height: menuFloatHeightDefault,
+                  width: menuFloatHeightDefault,
                   child: MouseRegion(
-                    onHover: (PointerHoverEvent e) {
-                      renewFocus();
-                    },
-                    onExit: (PointerExitEvent e) {
-                      hideMenu();
-                    },
-                    child: SizeTransition(
-                      sizeFactor: _expandAnimation,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black26,
-                              blurRadius: 10,
-                              offset: Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        child: SingleChildScrollView(
-                            child: Column(children: buildMenuFloatItems())),
-                        //width: double.maxFinite,
-                      ),
-                    ),
-                  )),
+                      onHover: (PointerHoverEvent e) {
+                        renewFocus();
+                      },
+                      onExit: (PointerExitEvent e) {
+                        hideMenu();
+                      },
+                      child: SizeTransition(
+                        sizeFactor: _expandAnimation,
+                        child: ConstrainedBox(
+                            constraints: const BoxConstraints(
+                                maxWidth: menuFloatWidthDefault,
+                                maxHeight: menuFloatHeightDefault),
+                            child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.black26,
+                                      blurRadius: 10,
+                                      offset: Offset(0, 5),
+                                    ),
+                                  ],
+                                ),
+                                child: Material(
+                                    child: ListView(
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  children: buildMenuFloatItems(),
+                                )))),
+                      )))
             ]);
       });
     });
@@ -203,25 +211,22 @@ class _MenuFloatState<T> extends State<MenuFloat>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(border: Border.all(color: Colors.red)),
-        child: Stack(
-            alignment: Alignment.center,
-            clipBehavior: Clip.none,
-            children: [
-              GestureDetector(
-                  child: MouseRegion(
-                    key: mouseRegionKey,
-                    cursor: SystemMouseCursors.click,
-                    child: widget.child,
-                    onExit: (PointerExitEvent e) {
-                      hideMenu();
-                    },
-                  ),
-                  onTap: () {
-                    showMenu();
-                  })
-            ]));
+    return Row(mainAxisSize: MainAxisSize.min, children: [
+      Container(
+          color: Colors.red,
+          alignment: Alignment.center,
+          key: mouseRegionKey,
+          child: GestureDetector(
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                onExit: (PointerExitEvent e) {
+                  hideMenu();
+                },
+                child: widget.child,
+              ),
+              onTap: () {
+                showMenu();
+              }))
+    ]);
   }
 }
