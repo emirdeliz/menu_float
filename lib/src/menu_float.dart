@@ -111,7 +111,12 @@ class _MenuFloatState<T> extends State<MenuFloat>
 
   List<Widget> buildMenuFloatItems() {
     List<MenuFloatItem<T>> items = widget.items.map((e) {
-      return MenuFloatItem<T>(item: e.value, label: e.label);
+      return MenuFloatItem<T>(
+        option: e.value,
+        onClick: (T v) {
+          print(e.label);
+        },
+      );
     }).toList();
     return items;
   }
@@ -168,7 +173,7 @@ class _MenuFloatState<T> extends State<MenuFloat>
   void hideMenu() {
     hasFocus = false;
     Future.delayed(const Duration(milliseconds: 500)).then((value) {
-      if (!hasFocus && entry != null) {
+      if (!hasFocus && entry != null && entry!.mounted) {
         entry?.remove();
       }
     });
@@ -178,10 +183,10 @@ class _MenuFloatState<T> extends State<MenuFloat>
     hasFocus = true;
   }
 
-  @override
-  void didUpdateWidget(covariant MenuFloat oldWidget) {
-    super.didUpdateWidget(oldWidget);
-  }
+  // @override
+  // void didUpdateWidget(covariant MenuFloat oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  // }
 
   @override
   void initState() {
