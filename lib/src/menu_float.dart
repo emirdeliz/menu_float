@@ -213,8 +213,6 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
   Widget build(BuildContext context) {
     return Row(mainAxisSize: MainAxisSize.min, children: [
       Container(
-          color: Colors.red,
-          alignment: Alignment.center,
           key: mouseRegionKey,
           child: GestureDetector(
               child: MouseRegion(
