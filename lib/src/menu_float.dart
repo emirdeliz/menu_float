@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:menu_float/src/widgets/menu_float_item/menu_float_item.dart';
+import 'package:menu_float/src/menu_float_item.dart';
 
 const double menuFloatWidthDefault = 300;
 const double menuFloatHeightDefault = 300;
@@ -111,7 +111,7 @@ class _MenuFloatState<T> extends State<MenuFloat>
 
   List<Widget> buildMenuFloatItems() {
     List<MenuFloatItem<T>> items = widget.items.map((e) {
-      return MenuFloatItem<T>(option: e);
+      return MenuFloatItem<T>(item: e.value, label: e.label);
     }).toList();
     return items;
   }

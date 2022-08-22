@@ -4,7 +4,7 @@ class MenuFloatOption<T> {
   final String label;
   final T value;
 
-  MenuFloatOption(this.label, this.value);
+  MenuFloatOption({required this.label, required this.value});
 }
 
 class MenuFloatItem<T> extends StatelessWidget {
