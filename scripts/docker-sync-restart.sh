@@ -1,0 +1,1 @@
+docker-sync-stack clean -c ./menu_float/docker-sync.yml && docker-sync-stack start -c ./menu_float/docker-sync.yml

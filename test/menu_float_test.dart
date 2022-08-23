@@ -3,11 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'menu_float_app_test.dart';
+import 'menu_float_app.dart';
 
 const String TITLE_WIDGET_TEST = 'Click me';
 const double PORTRAIT_WIDTH = 1024;
-const double PORTRAIT_HEIGHT = 767;
+const double PORTRAIT_HEIGHT = 769;
 const double LANDSCAPE_WIDTH = PORTRAIT_HEIGHT;
 const double LANDSCAPE_HEIGHT = PORTRAIT_WIDTH;
 
