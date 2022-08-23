@@ -3,7 +3,7 @@ services:
   menu_float_docker:
     platform: linux/arm64
     image: emirdeliz/flutter
-    command: ["sh", "./menu_float/scripts/watch-test.sh"]
+    # command: ["sh", "./menu_float/scripts/watch-test.sh"]
     ports:
       - 4002:4002
       - 35729:35729
@@ -11,7 +11,7 @@ services:
     stdin_open: true
     ipc: host
     volumes:
-      - appcode-unison-sync:/home/docker/app:nocopy
+      - appcode-unison-sync:/home/docker/apps:nocopy
 
 volumes:
   appcode-unison-sync:

@@ -212,19 +212,18 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
   @override
   Widget build(BuildContext context) {
     return Row(mainAxisSize: MainAxisSize.min, children: [
-      Container(
-          key: mouseRegionKey,
-          child: GestureDetector(
-              child: MouseRegion(
-                cursor: SystemMouseCursors.click,
-                onExit: (PointerExitEvent e) {
-                  hideMenu();
-                },
-                child: widget.child,
-              ),
-              onTap: () {
-                showMenu();
-              }))
+      Focus(
+          onFocusChange: (hasFocus) {
+            print('2:  $hasFocus');
+            hideMenu();
+          },
+          child: Container(
+              key: mouseRegionKey,
+              child: GestureDetector(
+                  child: widget.child,
+                  onTap: () {
+                    showMenu();
+                  })))
     ]);
   }
 }
