@@ -15,5 +15,4 @@ services:
 
 volumes:
   appcode-unison-sync:
-    external: true
     name: appcode-unison-rsync-sync
