@@ -134,47 +134,42 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
       return LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
         MenuFloatPosition style = getIdealPosition();
-        return Stack(
-            alignment: Alignment.centerLeft,
-            clipBehavior: Clip.none,
-            children: [
-              Positioned(
-                  left: style.left,
-                  top: style.top,
-                  height: menuFloatMaxHeight,
-                  width: menuFloatMaxHeight,
-                  child: MouseRegion(
-                      onHover: (PointerHoverEvent e) {
-                        renewFocus();
-                      },
-                      onExit: (PointerExitEvent e) {
-                        hideMenu();
-                      },
-                      child: SizeTransition(
-                        sizeFactor: _expandAnimation,
-                        child: ConstrainedBox(
-                            constraints: const BoxConstraints(
-                                maxWidth: menuFloatMaxWidth,
-                                maxHeight: menuFloatMaxHeight),
-                            child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Colors.black26,
-                                      blurRadius: 10,
-                                      offset: Offset(0, 5),
-                                    ),
-                                  ],
-                                ),
-                                child: Material(
-                                    child: ListView(
-                                  scrollDirection: Axis.vertical,
-                                  shrinkWrap: true,
-                                  children: buildMenuFloatItems(),
-                                )))),
-                      )))
-            ]);
+        return Positioned(
+            left: style.left,
+            top: style.top,
+            height: menuFloatMaxHeight,
+            width: menuFloatMaxHeight,
+            child: MouseRegion(
+                onHover: (PointerHoverEvent e) {
+                  renewFocus();
+                },
+                onExit: (PointerExitEvent e) {
+                  hideMenu();
+                },
+                child: SizeTransition(
+                  sizeFactor: _expandAnimation,
+                  child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                          maxWidth: menuFloatMaxWidth,
+                          maxHeight: menuFloatMaxHeight),
+                      child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 10,
+                                offset: Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: Material(
+                              child: ListView(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            children: buildMenuFloatItems(),
+                          )))),
+                )));
       });
     });
     Overlay.of(context)?.insert(entry!);
