@@ -123,6 +123,9 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     final targetPositionAndSize = getWidgetPositionAndSizeRelativeToWindow(
         targetKey.currentContext?.findRenderObject() as RenderBox);
 
+    final menuPositionAndSize = getWidgetPositionAndSizeRelativeToWindow(
+        menuKey.currentContext?.findRenderObject() as RenderBox);
+
     MenuFloatPosition style = MenuFloatPosition(top: 0, left: 0);
     if (widget.right) {
       style.left =
@@ -140,9 +143,10 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
           (menuFloatMaxHeight - targetPositionAndSize.height) +
           offset;
     } else {
-      style.left =
-          targetPositionAndSize.left - (targetPositionAndSize.width * 2);
-      style.top = targetPositionAndSize.top + offset;
+      style.left = targetPositionAndSize.left - (menuPositionAndSize.width / 2);
+      style.top = targetPositionAndSize.top +
+          targetPositionAndSize.height +
+          (offset * 2);
     }
 
     return maybeCheckAndFixOverflow(style);
@@ -169,13 +173,10 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
       return;
     }
 
-    hasFocus = true;
     entry = OverlayEntry(builder: (context) {
       return Positioned(
           left: floatPosition?.left,
           top: floatPosition?.top,
-          width: floatPosition != null ? menuFloatMaxWidth : 0,
-          height: floatPosition != null ? menuFloatMaxHeight : 0,
           child: MouseRegion(
             onHover: (PointerHoverEvent e) {
               renewFocus();
@@ -187,6 +188,8 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
                 sizeFactor: _expandAnimation,
                 child: Container(
                     key: menuKey,
+                    width: floatPosition != null ? null : 0,
+                    height: floatPosition != null ? null : 0,
                     constraints: const BoxConstraints(
                         maxWidth: menuFloatMaxWidth,
                         maxHeight: menuFloatMaxHeight),
@@ -209,6 +212,7 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
           ));
     });
 
+    _animationController.forward();
     Overlay.of(context)?.insert(entry!);
     setFloatPosition();
   }
@@ -220,22 +224,24 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     if (hasMenuOnWindow) {
       setState(() {
         floatPosition = getIdealPosition();
+        hasFocus = true;
       });
       entry?.markNeedsBuild();
     }
   }
 
-  void hideMenu() {
-    hasFocus = false;
-    Future.delayed(const Duration(milliseconds: 500)).then((value) {
-      if (!hasFocus && entry != null && entry!.mounted) {
-        setState(() {
-          floatPosition = null;
-        });
-
-        entry?.remove();
-      }
+  void hideMenu() async {
+    setState(() {
+      hasFocus = false;
     });
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (!hasFocus && entry != null && entry!.mounted) {
+      setState(() {
+        floatPosition = null;
+      });
+      await _animationController.reverse();
+      entry?.remove();
+    }
   }
 
   void renewFocus() {
@@ -251,9 +257,7 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
+        vsync: this, duration: const Duration(milliseconds: 300));
     _expandAnimation = CurvedAnimation(
       parent: _animationController,
       curve: Curves.ease,
