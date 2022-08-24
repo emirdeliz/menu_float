@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:menu_float/src/menu_float_item.dart';
@@ -46,8 +48,12 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _expandAnimation;
-  late GlobalKey targetKey = GlobalKey();
-  late GlobalKey menuKey = GlobalKey();
+  late int randomKey = Random().nextInt(1000);
+
+  late GlobalObjectKey targetKey =
+      GlobalObjectKey<_MenuFloatState<T>>('target-key-$randomKey');
+  late GlobalObjectKey menuKey =
+      GlobalObjectKey<_MenuFloatState<T>>('menu-key-$randomKey');
 
   MenuFloatPosition? floatPosition;
   bool hasFocus = false;
@@ -74,7 +80,7 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     final windowWidth = MediaQuery.of(context).size.width;
     final overflowWidth = windowWidth - targetPositionAndSize.left;
 
-    print("windowWidth $windowWidth overflowWidth $overflowWidth");
+    // print("windowWidth $windowWidth overflowWidth $overflowWidth");
 
     final overflowLeft = style.left - menuPositionAndSize.width;
     final hasOverflowLeft = overflowLeft < 0;
@@ -136,8 +142,8 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     } else {
       style.left =
           targetPositionAndSize.left - (targetPositionAndSize.width * 2);
-      style.top = targetPositionAndSize.top;
-      print("VV " + style.top.toString());
+      style.top =
+          targetPositionAndSize.top + targetPositionAndSize.height + offset;
     }
 
     return maybeCheckAndFixOverflow(style);
@@ -159,7 +165,8 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
   }
 
   void showMenu() {
-    if (hasFocus) {
+    final hasMenuOnWindow = floatPosition != null;
+    if (hasMenuOnWindow) {
       return;
     }
 
@@ -168,50 +175,72 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
       return Positioned(
           left: floatPosition?.left,
           top: floatPosition?.top,
+          width: menuFloatMaxWidth,
+          height: menuFloatMaxHeight,
           child: MouseRegion(
-            onHover: (PointerHoverEvent e) {
-              renewFocus();
-            },
-            onExit: (PointerExitEvent e) {
-              hideMenu();
-            },
-            child: SizeTransition(
+              onHover: (PointerHoverEvent e) {
+                renewFocus();
+              },
+              onExit: (PointerExitEvent e) {
+                hideMenu();
+              },
+              child: SizeTransition(
                 sizeFactor: _expandAnimation,
-                child: Container(
-                    key: menuKey,
-                    constraints: const BoxConstraints(
-                        maxWidth: menuFloatMaxWidth,
-                        maxHeight: menuFloatMaxHeight),
-                    decoration: BoxDecoration(
-                      color: floatPosition != null
-                          ? null
-                          : const Color.fromRGBO(255, 255, 255, 0),
-                      borderRadius: BorderRadius.circular(4),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 10,
-                          offset: Offset(0, 5),
+                child: Opacity(
+                    // opacity: floatPosition != null ? 1 : 0,
+                    opacity: 1,
+                    child: Container(
+                        key: menuKey,
+                        constraints: const BoxConstraints(
+                            maxWidth: menuFloatMaxWidth,
+                            maxHeight: menuFloatMaxHeight),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 10,
+                              offset: Offset(0, 5),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: Material(
-                        child: ListView(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      children: buildMenuFloatItems(),
-                    )))),
-          ));
+                        child: Material(
+                            child: ListView(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          children: buildMenuFloatItems(),
+                        )))),
+              )));
     });
-    Overlay.of(context)?.insert(entry!);
+
+    OverlayState? overlayState = Overlay.of(context);
+    _animationController.addListener(() {
+      overlayState!.setState(() {});
+    });
+    _animationController.forward();
+    // overlayState!.insert(entry!);
+    Overlay.of(context, rootOverlay: true)?.insert(entry!);
+    setFloatPosition();
+  }
+
+  void setFloatPosition() async {
+    final hasMenuOnWindow = menuKey.currentContext != null;
+    if (hasMenuOnWindow) {
+      setState(() {
+        floatPosition = getIdealPosition();
+      });
+    }
   }
 
   void hideMenu() {
     hasFocus = false;
-    floatPosition = null;
-    Future.delayed(const Duration(milliseconds: 500)).then((value) {
+    Future.delayed(const Duration(milliseconds: 300)).then((value) {
       if (!hasFocus && entry != null && entry!.mounted) {
-        entry?.remove();
+        setState(() {
+          print('Removed....');
+          entry?.remove();
+          floatPosition = null;
+        });
       }
     });
   }
@@ -220,15 +249,10 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     hasFocus = true;
   }
 
-  @override
-  void didUpdateWidget(covariant MenuFloat<T> oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (floatPosition == null && hasFocus) {
-      setState(() {
-        floatPosition = getIdealPosition();
-      });
-    }
-  }
+  // @override
+  // void didUpdateWidget(covariant MenuFloat<T> oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  // }
 
   @override
   void initState() {
@@ -249,11 +273,15 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
         key: targetKey,
         child: GestureDetector(
             child: MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: IgnorePointer(
-                  ignoring: true,
-                  child: widget.child,
-                )),
+              cursor: SystemMouseCursors.click,
+              child: IgnorePointer(
+                ignoring: true,
+                child: widget.child,
+              ),
+              onHover: (PointerHoverEvent e) {
+                renewFocus();
+              },
+            ),
             onTap: () {
               showMenu();
             }));
