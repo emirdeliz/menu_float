@@ -2,8 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:menu_float/src/menu_float_item.dart';
 
-const double menuFloatWidthDefault = 300;
-const double menuFloatHeightDefault = 300;
+const double menuFloatMaxWidth = 300;
+const double menuFloatMaxHeight = 300;
 
 class MenuFloatPosition {
   double top;
@@ -45,7 +45,7 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _expandAnimation;
-  late GlobalKey mouseRegionKey = GlobalKey();
+  late GlobalKey targetKey = GlobalKey();
 
   bool hasFocus = false;
   OverlayEntry? entry;
@@ -62,47 +62,49 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
   }
 
   MenuFloatPosition getIdealPosition() {
-    final mouseRegionPositionSize = getWidgetPositionAndSizeRelativeToWindow(
-        mouseRegionKey.currentContext?.findRenderObject() as RenderBox);
+    final targetPositionAndSize = getWidgetPositionAndSizeRelativeToWindow(
+        targetKey.currentContext?.findRenderObject() as RenderBox);
 
     MenuFloatPosition style = MenuFloatPosition(top: 0, left: 0);
     double offset = 3;
 
     if (widget.right) {
       style.left =
-          mouseRegionPositionSize.left - menuFloatWidthDefault - (offset * 2);
-      style.top = mouseRegionPositionSize.top - menuFloatHeightDefault / 2;
+          targetPositionAndSize.left - menuFloatMaxWidth - (offset * 2);
+      style.top = targetPositionAndSize.top - menuFloatMaxHeight / 2;
     } else if (widget.left) {
-      style.left = mouseRegionPositionSize.left +
-          mouseRegionPositionSize.width +
+      style.left = targetPositionAndSize.left +
+          targetPositionAndSize.width +
           (offset * 2);
-      style.top = mouseRegionPositionSize.top - menuFloatHeightDefault / 2;
+      style.top = targetPositionAndSize.top - menuFloatMaxHeight / 2;
     } else if (widget.top) {
       style.left =
-          mouseRegionPositionSize.left - (mouseRegionPositionSize.width * 2);
-      style.top = mouseRegionPositionSize.top -
-          (menuFloatHeightDefault - mouseRegionPositionSize.height) +
+          targetPositionAndSize.left - (targetPositionAndSize.width * 2);
+      style.top = targetPositionAndSize.top -
+          (menuFloatMaxHeight - targetPositionAndSize.height) +
           offset;
     } else {
       style.left =
-          mouseRegionPositionSize.left - (mouseRegionPositionSize.width * 2);
-      style.top = mouseRegionPositionSize.top;
+          targetPositionAndSize.left - (targetPositionAndSize.width * 2);
+      style.top = targetPositionAndSize.top;
     }
 
     final offsetWidth = MediaQuery.of(context).size.width;
-    final overflowWidth = offsetWidth - mouseRegionPositionSize.left;
-    final overflowLeft =
-        (style.left + overflowWidth) - mouseRegionPositionSize.width;
+    final overflowWidth = offsetWidth - targetPositionAndSize.left;
+    final overflowLeft = style.left - menuFloatMaxWidth;
+
+    print("overflowLeft $overflowLeft");
+
     final hasOverflowLeft = overflowLeft < 0;
     if (hasOverflowLeft) {
       final left = style.left + overflowLeft;
       style.left = left < 0 ? offset : left;
     }
 
-    final overflowRight = overflowWidth - mouseRegionPositionSize.width;
+    final overflowRight = overflowWidth - targetPositionAndSize.width;
     final hasOverflowRight = overflowRight < 0;
     if (hasOverflowRight) {
-      style.left = offsetWidth - mouseRegionPositionSize.width - offset;
+      style.left = offsetWidth - targetPositionAndSize.width - offset;
     }
     return style;
   }
@@ -139,8 +141,8 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
               Positioned(
                   left: style.left,
                   top: style.top,
-                  height: menuFloatHeightDefault,
-                  width: menuFloatHeightDefault,
+                  height: menuFloatMaxHeight,
+                  width: menuFloatMaxHeight,
                   child: MouseRegion(
                       onHover: (PointerHoverEvent e) {
                         renewFocus();
@@ -152,8 +154,8 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
                         sizeFactor: _expandAnimation,
                         child: ConstrainedBox(
                             constraints: const BoxConstraints(
-                                maxWidth: menuFloatWidthDefault,
-                                maxHeight: menuFloatHeightDefault),
+                                maxWidth: menuFloatMaxWidth,
+                                maxHeight: menuFloatMaxHeight),
                             child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(4),
@@ -212,18 +214,20 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
   @override
   Widget build(BuildContext context) {
     return Row(mainAxisSize: MainAxisSize.min, children: [
-      Focus(
-          onFocusChange: (hasFocus) {
-            print('2:  $hasFocus');
-            hideMenu();
-          },
-          child: Container(
-              key: mouseRegionKey,
-              child: GestureDetector(
-                  child: widget.child,
-                  onTap: () {
-                    showMenu();
-                  })))
+      Container(
+          key: targetKey,
+          // decoration:
+          //     BoxDecoration(border: Border.all(color: Colors.red, width: 3)),
+          child: GestureDetector(
+              child: MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: IgnorePointer(
+                    ignoring: true,
+                    child: widget.child,
+                  )),
+              onTap: () {
+                showMenu();
+              }))
     ]);
   }
 }
