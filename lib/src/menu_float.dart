@@ -4,6 +4,7 @@ import 'package:menu_float/src/menu_float_item.dart';
 
 const double menuFloatMaxWidth = 300;
 const double menuFloatMaxHeight = 300;
+const double offset = 3;
 
 class MenuFloatPosition {
   double top;
@@ -46,7 +47,9 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
   late AnimationController _animationController;
   late Animation<double> _expandAnimation;
   late GlobalKey targetKey = GlobalKey();
+  late GlobalKey menuKey = GlobalKey();
 
+  MenuFloatPosition? floatPosition;
   bool hasFocus = false;
   OverlayEntry? entry;
 
@@ -61,13 +64,60 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
         top: top, left: left, width: width, height: height);
   }
 
+  MenuFloatPosition maybeCheckAndFixOverflow(MenuFloatPosition style) {
+    final targetPositionAndSize = getWidgetPositionAndSizeRelativeToWindow(
+        targetKey.currentContext?.findRenderObject() as RenderBox);
+
+    final menuPositionAndSize = getWidgetPositionAndSizeRelativeToWindow(
+        menuKey.currentContext?.findRenderObject() as RenderBox);
+
+    final windowWidth = MediaQuery.of(context).size.width;
+    final overflowWidth = windowWidth - targetPositionAndSize.left;
+
+    print("windowWidth $windowWidth overflowWidth $overflowWidth");
+
+    final overflowLeft = style.left - menuPositionAndSize.width;
+    final hasOverflowLeft = overflowLeft < 0;
+    if (hasOverflowLeft) {
+      final left = style.left + overflowLeft;
+      style.left = left < 0 ? offset : left;
+    }
+
+    final overflowRight =
+        windowWidth - (style.left + menuPositionAndSize.width);
+    final hasOverflowRight = overflowRight < 0;
+    if (hasOverflowRight) {
+      style.left = overflowRight - offset;
+    }
+
+    // final offsetHeight = MediaQuery.of(context).size.height;
+    // final overflowHeight = offsetHeight - targetPositionAndSize.top;
+    // final overflowTop = style.top - menuFloatMaxHeight;
+
+    // final hasOverflowTop = overflowTop < 0;
+    // if (hasOverflowTop) {
+    //   final top = style.top + overflowTop;
+    //   style.top = top < 0 ? offset : top;
+    // }
+
+    // final overflowBottom = overflowHeight - targetPositionAndSize.height;
+    // final hasOverflowBottom = overflowBottom > 0;
+
+    // print("overflowBottom: $overflowBottom");
+
+    // if (hasOverflowBottom) {
+    //   style.top = offsetHeight - targetPositionAndSize.height - offset;
+    //   double c = style.top;
+    //   print("S $c");
+    // }
+    return style;
+  }
+
   MenuFloatPosition getIdealPosition() {
     final targetPositionAndSize = getWidgetPositionAndSizeRelativeToWindow(
         targetKey.currentContext?.findRenderObject() as RenderBox);
 
     MenuFloatPosition style = MenuFloatPosition(top: 0, left: 0);
-    double offset = 3;
-
     if (widget.right) {
       style.left =
           targetPositionAndSize.left - menuFloatMaxWidth - (offset * 2);
@@ -87,26 +137,10 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
       style.left =
           targetPositionAndSize.left - (targetPositionAndSize.width * 2);
       style.top = targetPositionAndSize.top;
+      print("VV " + style.top.toString());
     }
 
-    final offsetWidth = MediaQuery.of(context).size.width;
-    final overflowWidth = offsetWidth - targetPositionAndSize.left;
-    final overflowLeft = style.left - menuFloatMaxWidth;
-
-    print("overflowLeft $overflowLeft");
-
-    final hasOverflowLeft = overflowLeft < 0;
-    if (hasOverflowLeft) {
-      final left = style.left + overflowLeft;
-      style.left = left < 0 ? offset : left;
-    }
-
-    final overflowRight = overflowWidth - targetPositionAndSize.width;
-    final hasOverflowRight = overflowRight < 0;
-    if (hasOverflowRight) {
-      style.left = offsetWidth - targetPositionAndSize.width - offset;
-    }
-    return style;
+    return maybeCheckAndFixOverflow(style);
   }
 
   List<ListTile> buildMenuFloatItems() {
@@ -131,52 +165,50 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
 
     hasFocus = true;
     entry = OverlayEntry(builder: (context) {
-      return LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-        MenuFloatPosition style = getIdealPosition();
-        return Positioned(
-            left: style.left,
-            top: style.top,
-            height: menuFloatMaxHeight,
-            width: menuFloatMaxHeight,
-            child: MouseRegion(
-                onHover: (PointerHoverEvent e) {
-                  renewFocus();
-                },
-                onExit: (PointerExitEvent e) {
-                  hideMenu();
-                },
-                child: SizeTransition(
-                  sizeFactor: _expandAnimation,
-                  child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                          maxWidth: menuFloatMaxWidth,
-                          maxHeight: menuFloatMaxHeight),
-                      child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 10,
-                                offset: Offset(0, 5),
-                              ),
-                            ],
-                          ),
-                          child: Material(
-                              child: ListView(
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            children: buildMenuFloatItems(),
-                          )))),
-                )));
-      });
+      return Positioned(
+          left: floatPosition?.left,
+          top: floatPosition?.top,
+          child: MouseRegion(
+            onHover: (PointerHoverEvent e) {
+              renewFocus();
+            },
+            onExit: (PointerExitEvent e) {
+              hideMenu();
+            },
+            child: SizeTransition(
+                sizeFactor: _expandAnimation,
+                child: Container(
+                    key: menuKey,
+                    constraints: const BoxConstraints(
+                        maxWidth: menuFloatMaxWidth,
+                        maxHeight: menuFloatMaxHeight),
+                    decoration: BoxDecoration(
+                      color: floatPosition != null
+                          ? null
+                          : const Color.fromRGBO(255, 255, 255, 0),
+                      borderRadius: BorderRadius.circular(4),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 10,
+                          offset: Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: Material(
+                        child: ListView(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      children: buildMenuFloatItems(),
+                    )))),
+          ));
     });
     Overlay.of(context)?.insert(entry!);
   }
 
   void hideMenu() {
     hasFocus = false;
+    floatPosition = null;
     Future.delayed(const Duration(milliseconds: 500)).then((value) {
       if (!hasFocus && entry != null && entry!.mounted) {
         entry?.remove();
@@ -188,10 +220,15 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     hasFocus = true;
   }
 
-  // @override
-  // void didUpdateWidget(covariant MenuFloat oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  // }
+  @override
+  void didUpdateWidget(covariant MenuFloat<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (floatPosition == null && hasFocus) {
+      setState(() {
+        floatPosition = getIdealPosition();
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -208,21 +245,17 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
 
   @override
   Widget build(BuildContext context) {
-    return Row(mainAxisSize: MainAxisSize.min, children: [
-      Container(
-          key: targetKey,
-          // decoration:
-          //     BoxDecoration(border: Border.all(color: Colors.red, width: 3)),
-          child: GestureDetector(
-              child: MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: IgnorePointer(
-                    ignoring: true,
-                    child: widget.child,
-                  )),
-              onTap: () {
-                showMenu();
-              }))
-    ]);
+    return Container(
+        key: targetKey,
+        child: GestureDetector(
+            child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: IgnorePointer(
+                  ignoring: true,
+                  child: widget.child,
+                )),
+            onTap: () {
+              showMenu();
+            }));
   }
 }
