@@ -51,6 +51,7 @@ class MenuFloatAppTestPage extends StatefulWidget {
   final bool right;
   final double x;
   final double y;
+  final Widget target;
 
   const MenuFloatAppTestPage(
       {Key? key,
@@ -61,7 +62,6 @@ class MenuFloatAppTestPage extends StatefulWidget {
       this.left = false,
       this.right = false})
       : super(key: key);
-  final Widget target;
 
   @override
   State<MenuFloatAppTestPage> createState() => _MenuFloatAppTestPageState();

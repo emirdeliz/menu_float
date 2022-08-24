@@ -12,13 +12,13 @@ options:
   project_root: 'pwd'
 
   # The image to use for the rsync container. (<sync_strategy>_image)
-  # native_osx_image: eugenmayer/unison:2.51.3-4.12.0-ARM64
+  native_osx_image: eugenmayer/unison:2.51.3-4.12.0-ARM64
 
   # The image to use for the rsync container. (<sync_strategy>_image)
   # unison_image: eugenmayer/unison:2.51.3-4.12.0-ARM64
 
   # The image to use for the rsync container. (<sync_strategy>_image)
-  rsync_image: emirdeliz/eugenmayer-rsync-arm-64:latest
+  # rsync_image: emirdeliz/eugenmayer-rsync-arm-64:latest
 syncs:
   #IMPORTANT: ensure this name is unique and does not match your other application container name
   appcode-unison-rsync-sync: #tip: add -sync and you keep consistent names as a convention
