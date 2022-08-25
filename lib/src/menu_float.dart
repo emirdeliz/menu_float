@@ -78,10 +78,6 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
         menuKey.currentContext?.findRenderObject() as RenderBox);
 
     final windowWidth = MediaQuery.of(context).size.width;
-    final overflowWidth = windowWidth - targetPositionAndSize.left;
-
-    // print("windowWidth $windowWidth overflowWidth $overflowWidth");
-
     final overflowLeft = style.left - menuPositionAndSize.width;
     final hasOverflowLeft = overflowLeft < 0;
     if (hasOverflowLeft) {
@@ -96,26 +92,22 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
       style.left = overflowRight - offset;
     }
 
-    // final offsetHeight = MediaQuery.of(context).size.height;
-    // final overflowHeight = offsetHeight - targetPositionAndSize.top;
-    // final overflowTop = style.top - menuFloatMaxHeight;
+    final windowHeight = MediaQuery.of(context).size.height;
+    final overflowHeight = windowHeight - targetPositionAndSize.top;
+    final overflowTop = style.top - menuPositionAndSize.height;
 
-    // final hasOverflowTop = overflowTop < 0;
-    // if (hasOverflowTop) {
-    //   final top = style.top + overflowTop;
-    //   style.top = top < 0 ? offset : top;
-    // }
+    final hasOverflowTop = overflowTop < 0;
+    if (hasOverflowTop) {
+      final top = style.top + overflowTop;
+      style.top = top < 0 ? offset : top;
+    }
 
-    // final overflowBottom = overflowHeight - targetPositionAndSize.height;
-    // final hasOverflowBottom = overflowBottom > 0;
+    final overflowBottom = overflowHeight - menuPositionAndSize.height;
+    final hasOverflowBottom = overflowBottom > 0;
 
-    // print("overflowBottom: $overflowBottom");
-
-    // if (hasOverflowBottom) {
-    //   style.top = offsetHeight - targetPositionAndSize.height - offset;
-    //   double c = style.top;
-    //   print("S $c");
-    // }
+    if (hasOverflowBottom) {
+      style.top = windowHeight - menuPositionAndSize.height - offset;
+    }
     return style;
   }
 
@@ -137,8 +129,7 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
           (offset * 2);
       style.top = targetPositionAndSize.top - menuFloatMaxHeight / 2;
     } else if (widget.top) {
-      style.left =
-          targetPositionAndSize.left - (targetPositionAndSize.width * 2);
+      style.left = targetPositionAndSize.left - (menuPositionAndSize.width / 2);
       style.top = targetPositionAndSize.top -
           (menuFloatMaxHeight - targetPositionAndSize.height) +
           offset;
