@@ -56,7 +56,8 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
       GlobalObjectKey<_MenuFloatState<T>>('menu-key-$randomKey');
 
   MenuFloatPosition? floatPosition;
-  bool hasFocus = false;
+  bool hasTargetFocus = false;
+  bool hasMenuFocus = false;
   OverlayEntry? entry;
 
   MenuFloatIdealPosition getWidgetPositionAndSizeRelativeToWindow(
@@ -161,23 +162,22 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     if (hasMenuOnWindow) {
       return;
     }
-    setState(() {
-      hasFocus = true;
-    });
 
     entry = OverlayEntry(builder: (context) {
       return Positioned(
           left: floatPosition?.left,
           top: floatPosition?.top,
           child: MouseRegion(
-              onHover: (PointerHoverEvent e) {
-                renewFocus();
-              },
               onExit: (PointerExitEvent e) {
+                setState(() {
+                  hasMenuFocus = false;
+                });
                 hideMenu();
               },
               onEnter: (PointerEnterEvent e) {
-                renewFocus();
+                setState(() {
+                  hasMenuFocus = true;
+                });
               },
               child: SizeTransition(
                 sizeFactor: _expandAnimation,
@@ -228,23 +228,14 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
   }
 
   void hideMenu() async {
-    setState(() {
-      hasFocus = false;
-    });
     await Future.delayed(const Duration(milliseconds: 300));
-    if (!hasFocus && entry != null && entry!.mounted) {
+    if (!hasTargetFocus && !hasMenuFocus && entry != null && entry!.mounted) {
       setState(() {
         floatPosition = null;
       });
       await _animationController.reverse();
       entry?.remove();
     }
-  }
-
-  void renewFocus() {
-    setState(() {
-      hasFocus = true;
-    });
   }
 
   // @override
@@ -274,10 +265,15 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
                   ignoring: true,
                   child: widget.child,
                 ),
-                onHover: (PointerHoverEvent e) {
-                  renewFocus();
+                onEnter: (PointerEnterEvent e) {
+                  setState(() {
+                    hasTargetFocus = true;
+                  });
                 },
                 onExit: (PointerExitEvent e) {
+                  setState(() {
+                    hasTargetFocus = false;
+                  });
                   hideMenu();
                 }),
             onTap: () {
