@@ -71,42 +71,43 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
   }
 
   MenuFloatPosition maybeCheckAndFixOverflow(MenuFloatPosition style) {
-    final targetPositionAndSize = getWidgetPositionAndSizeRelativeToWindow(
-        targetKey.currentContext?.findRenderObject() as RenderBox);
-
     final menuPositionAndSize = getWidgetPositionAndSizeRelativeToWindow(
         menuKey.currentContext?.findRenderObject() as RenderBox);
 
-    final windowWidth = MediaQuery.of(context).size.width;
+    final targetPositionAndSize = getWidgetPositionAndSizeRelativeToWindow(
+        targetKey.currentContext?.findRenderObject() as RenderBox);
+
     final overflowLeft = style.left - menuPositionAndSize.width;
     final hasOverflowLeft = overflowLeft < 0;
     if (hasOverflowLeft) {
-      final left = style.left + overflowLeft;
-      style.left = left < 0 ? offset : left;
+      style.left = 0;
     }
 
+    final windowWidth = MediaQuery.of(context).size.width;
     final overflowRight =
         windowWidth - (style.left + menuPositionAndSize.width);
+
     final hasOverflowRight = overflowRight < 0;
     if (hasOverflowRight) {
-      style.left = overflowRight - offset;
+      style.left = windowWidth - menuPositionAndSize.width;
+    }
+
+    final overflowTop = style.top - menuPositionAndSize.height;
+    final hasOverflowTop = overflowTop < 0;
+    if (hasOverflowTop) {
+      style.top = targetPositionAndSize.height;
     }
 
     final windowHeight = MediaQuery.of(context).size.height;
-    final overflowHeight = windowHeight - targetPositionAndSize.top;
-    final overflowTop = style.top - menuPositionAndSize.height;
-
-    final hasOverflowTop = overflowTop < 0;
-    if (hasOverflowTop) {
-      final top = style.top + overflowTop;
-      style.top = top < 0 ? offset : top;
-    }
-
-    final overflowBottom = overflowHeight - menuPositionAndSize.height;
-    final hasOverflowBottom = overflowBottom > 0;
+    final overflowBottom =
+        windowHeight - (style.top + menuPositionAndSize.height);
+    final hasOverflowBottom = overflowBottom < 0;
 
     if (hasOverflowBottom) {
-      style.top = windowHeight - menuPositionAndSize.height - offset;
+      style.top = windowHeight -
+          menuPositionAndSize.height -
+          targetPositionAndSize.height -
+          offset * 2;
     }
     return style;
   }
@@ -114,9 +115,6 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
   MenuFloatPosition getIdealPosition() {
     final targetPositionAndSize = getWidgetPositionAndSizeRelativeToWindow(
         targetKey.currentContext?.findRenderObject() as RenderBox);
-
-    final menuPositionAndSize = getWidgetPositionAndSizeRelativeToWindow(
-        menuKey.currentContext?.findRenderObject() as RenderBox);
 
     MenuFloatPosition style = MenuFloatPosition(top: 0, left: 0);
     if (widget.right) {
@@ -129,12 +127,12 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
           (offset * 2);
       style.top = targetPositionAndSize.top - menuFloatMaxHeight / 2;
     } else if (widget.top) {
-      style.left = targetPositionAndSize.left - (menuPositionAndSize.width / 2);
+      style.left = targetPositionAndSize.left;
       style.top = targetPositionAndSize.top -
           (menuFloatMaxHeight - targetPositionAndSize.height) +
           offset;
     } else {
-      style.left = targetPositionAndSize.left - (menuPositionAndSize.width / 2);
+      style.left = targetPositionAndSize.left;
       style.top = targetPositionAndSize.top +
           targetPositionAndSize.height +
           (offset * 2);
@@ -163,44 +161,53 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     if (hasMenuOnWindow) {
       return;
     }
+    setState(() {
+      hasFocus = true;
+    });
 
     entry = OverlayEntry(builder: (context) {
       return Positioned(
           left: floatPosition?.left,
           top: floatPosition?.top,
           child: MouseRegion(
-            onHover: (PointerHoverEvent e) {
-              renewFocus();
-            },
-            onExit: (PointerExitEvent e) {
-              hideMenu();
-            },
-            child: SizeTransition(
+              onHover: (PointerHoverEvent e) {
+                renewFocus();
+              },
+              onExit: (PointerExitEvent e) {
+                hideMenu();
+              },
+              onEnter: (PointerEnterEvent e) {
+                renewFocus();
+              },
+              child: SizeTransition(
                 sizeFactor: _expandAnimation,
-                child: Container(
-                    key: menuKey,
-                    width: floatPosition != null ? null : 0,
-                    height: floatPosition != null ? null : 0,
-                    constraints: const BoxConstraints(
-                        maxWidth: menuFloatMaxWidth,
-                        maxHeight: menuFloatMaxHeight),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 10,
-                          offset: Offset(0, 5),
-                        ),
-                      ],
-                    ),
+                child: Opacity(
+                    opacity: floatPosition != null ? 1 : 0,
                     child: Material(
-                        child: ListView(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      children: buildMenuFloatItems(),
-                    )))),
-          ));
+                        child: Container(
+                            key: menuKey,
+                            // width: floatPosition != null ? null : 0,
+                            // height: floatPosition != null ? null : 0,
+                            constraints: const BoxConstraints(
+                                maxWidth: menuFloatMaxWidth,
+                                maxHeight: menuFloatMaxHeight),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 10,
+                                    offset: Offset(7, -5),
+                                    blurStyle: BlurStyle.outer),
+                              ],
+                              // border: Border.all(color: Colors.black, width: 3)
+                            ),
+                            child: ListView(
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              children: buildMenuFloatItems(),
+                            )))),
+              )));
     });
 
     _animationController.forward();
@@ -215,7 +222,6 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     if (hasMenuOnWindow) {
       setState(() {
         floatPosition = getIdealPosition();
-        hasFocus = true;
       });
       entry?.markNeedsBuild();
     }
@@ -236,7 +242,9 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
   }
 
   void renewFocus() {
-    hasFocus = true;
+    setState(() {
+      hasFocus = true;
+    });
   }
 
   // @override
