@@ -46,8 +46,7 @@ class MenuFloat<T> extends StatefulWidget {
 
 class _MenuFloatState<T> extends State<MenuFloat<T>>
     with SingleTickerProviderStateMixin {
-  late int randomKey = Random().nextInt(100000);
-
+  int randomKey = Random().nextInt(100000);
   late GlobalObjectKey targetKey =
       GlobalObjectKey<_MenuFloatState<T>>('target-key-$randomKey');
   late GlobalObjectKey menuKey =
@@ -206,12 +205,16 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
                 )
               ])));
     });
-
     overlayState?.insert(entry!);
     await setFloatPosition(overlayState);
   }
 
   Future<void> setFloatPosition(OverlayState? overlayState) async {
+    if (menuKey.currentContext == null) {
+      await Future.delayed(const Duration(milliseconds: 100));
+      await setFloatPosition(overlayState);
+      return;
+    }
     await Future.delayed(const Duration(milliseconds: 100));
     overlayState?.setState(() {
       floatPosition = getIdealPosition();

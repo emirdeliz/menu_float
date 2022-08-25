@@ -5,35 +5,31 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'menu_float_app.dart';
 
-const String TITLE_WIDGET_TARGET = 'Click me';
-const String TITLE_OPTION_MENU = 'Telefone';
-const double LANDSCAPE_WIDTH = 1024;
-const double LANDSCAPE_HEIGHT = 769;
+const String titleWidgetTarget = 'Click me';
+const String titleOptionMenu = 'Telefone';
 
 Widget makeTargetButton() {
   return ElevatedButton(
-      onPressed: () => {}, child: const Text(TITLE_WIDGET_TARGET));
+      onPressed: () => {}, child: const Text(titleWidgetTarget));
+}
+
+Future<void> initializeAndTapAtPosition(
+    WidgetTester tester, double x, double y, double tapX, double tapY) async {
+  final target = makeTargetButton();
+  await tester.pumpWidget(MenuFloatAppTest(target: target, x: x, y: y));
+  await tester.pumpAndSettle();
+
+  await tester.tapAt(Offset(tapX, tapY));
+  await tester.pumpAndSettle(const Duration(seconds: 3));
+  await tester.pump(const Duration(seconds: 3));
 }
 
 void main() {
-  final TestWidgetsFlutterBinding binding =
-      TestWidgetsFlutterBinding.ensureInitialized();
-  group('have menu for the button', () {
-    testWidgets('finds a Text widget', (tester) async {
-      await binding
-          .setSurfaceSize(const Size(LANDSCAPE_WIDTH, LANDSCAPE_HEIGHT));
+  testWidgets('have menu for the button', (tester) async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    await initializeAndTapAtPosition(tester, 0, 0, 40, 15);
 
-      final target = makeTargetButton();
-      await tester.pumpWidget(MenuFloatAppTest(target: target, x: 0, y: 0));
-
-      await tester.pumpAndSettle();
-      final button = find.byWidget(target);
-
-      await tester.tap(button);
-      await tester.pumpAndSettle();
-
-      final menu = find.text(TITLE_WIDGET_TARGET);
-      expect(menu, findsOneWidget);
-    });
+    final menu = find.text(titleOptionMenu);
+    expect(menu, findsOneWidget);
   });
 }

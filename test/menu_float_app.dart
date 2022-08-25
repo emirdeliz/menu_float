@@ -1,15 +1,16 @@
-// ignore_for_file: avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:menu_float/menu_float.dart';
 
 import '__mock__/menu_float.mock.dart';
 
+const double landscapeWidth = 1024;
+const double landscapeHeight = 768;
 final menusOptions = productMock.map<MenuFloatOption<Product>>((e) {
   return MenuFloatOption<Product>(
       label: e.name,
       value: e,
       onClick: (Product v) {
+        // ignore: avoid_print
         print(v.name);
       });
 }).toList();
@@ -34,14 +35,24 @@ class MenuFloatAppTest extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MenuFloatAppTestPage(
-          target: target, x: x, y: y, top: top, left: left, right: right),
-    );
+    return MediaQuery(
+        data: const MediaQueryData(size: Size(landscapeWidth, landscapeHeight)),
+        child: Directionality(
+            textDirection: TextDirection.ltr,
+            child: Overlay(initialEntries: <OverlayEntry>[
+              OverlayEntry(builder: (BuildContext context) {
+                return Stack(children: <Widget>[
+                  MenuFloatAppTestPage(
+                    target: target,
+                    x: x,
+                    y: y,
+                    top: top,
+                    left: left,
+                    right: right,
+                  )
+                ]);
+              })
+            ])));
   }
 }
 
@@ -70,38 +81,19 @@ class MenuFloatAppTestPage extends StatefulWidget {
 class _MenuFloatAppTestPageState extends State<MenuFloatAppTestPage> {
   @override
   Widget build(BuildContext context) {
-    return Overlay(
-      initialEntries: <OverlayEntry>[
-        OverlayEntry(
-          builder: (BuildContext context) {
-            return Stack(
-              children: <Widget>[
-                Positioned(
-                  left: widget.x,
-                  top: widget.y,
-                  child: Container(
-                      alignment: Alignment.center,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          MenuFloat<Product>(
-                            title: 'Hello menu float',
-                            items: menusOptions,
-                            top: widget.top,
-                            left: widget.left,
-                            right: widget.right,
-                            child: widget.target,
-                          )
-                        ],
-                      )),
-                ),
-              ],
-            );
-          },
-        ),
-      ],
+    return Positioned(
+      left: widget.x,
+      top: widget.y,
+      child: Container(
+          alignment: Alignment.center,
+          child: MenuFloat<Product>(
+            title: 'Hello menu float',
+            items: menusOptions,
+            top: widget.top,
+            left: widget.left,
+            right: widget.right,
+            child: widget.target,
+          )),
     );
   }
 }
