@@ -46,9 +46,7 @@ class MenuFloat<T> extends StatefulWidget {
 
 class _MenuFloatState<T> extends State<MenuFloat<T>>
     with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _expandAnimation;
-  late int randomKey = Random().nextInt(1000);
+  late int randomKey = Random().nextInt(100000);
 
   late GlobalObjectKey targetKey =
       GlobalObjectKey<_MenuFloatState<T>>('target-key-$randomKey');
@@ -105,10 +103,8 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     final hasOverflowBottom = overflowBottom < 0;
 
     if (hasOverflowBottom) {
-      style.top = windowHeight -
-          menuPositionAndSize.height -
-          targetPositionAndSize.height -
-          offset * 2;
+      style.top =
+          targetPositionAndSize.top - menuPositionAndSize.height - offset * 2;
     }
     return style;
   }
@@ -157,12 +153,13 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     return items;
   }
 
-  void showMenu() {
+  Future<void> showMenu() async {
     final hasMenuOnWindow = floatPosition != null;
     if (hasMenuOnWindow) {
       return;
     }
 
+    OverlayState? overlayState = Overlay.of(context);
     entry = OverlayEntry(builder: (context) {
       return Positioned(
           left: floatPosition?.left,
@@ -179,52 +176,46 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
                   hasMenuFocus = true;
                 });
               },
-              child: SizeTransition(
-                sizeFactor: _expandAnimation,
-                child: Opacity(
-                    opacity: floatPosition != null ? 1 : 0,
-                    child: Material(
-                        child: Container(
-                            key: menuKey,
-                            // width: floatPosition != null ? null : 0,
-                            // height: floatPosition != null ? null : 0,
-                            constraints: const BoxConstraints(
-                                maxWidth: menuFloatMaxWidth,
-                                maxHeight: menuFloatMaxHeight),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              boxShadow: const [
-                                BoxShadow(
-                                    color: Colors.black26,
-                                    blurRadius: 10,
-                                    offset: Offset(7, -5),
-                                    blurStyle: BlurStyle.outer),
-                              ],
-                              // border: Border.all(color: Colors.black, width: 3)
-                            ),
-                            child: ListView(
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              children: buildMenuFloatItems(),
-                            )))),
-              )));
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Opacity(
+                  opacity: floatPosition != null ? 1 : 0,
+                  child: Container(
+                      // width: floatPosition != null ? null : 0,
+                      // height: floatPosition != null ? null : 0,
+                      key: menuKey,
+                      constraints: const BoxConstraints(
+                          maxWidth: menuFloatMaxWidth,
+                          maxHeight: menuFloatMaxHeight),
+                      decoration: BoxDecoration(
+                        color: Colors.white24,
+                        borderRadius: BorderRadius.circular(4),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 5,
+                            offset: Offset(-1, 3),
+                          ),
+                        ],
+                      ),
+                      child: Material(
+                          child: ListView(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        children: buildMenuFloatItems(),
+                      ))),
+                )
+              ])));
     });
 
-    _animationController.forward();
-    Overlay.of(context)?.insert(entry!);
-    setFloatPosition();
+    overlayState?.insert(entry!);
+    await setFloatPosition(overlayState);
   }
 
-  void setFloatPosition() async {
+  Future<void> setFloatPosition(OverlayState? overlayState) async {
     await Future.delayed(const Duration(milliseconds: 100));
-    final hasMenuOnWindow = menuKey.currentContext != null;
-
-    if (hasMenuOnWindow) {
-      setState(() {
-        floatPosition = getIdealPosition();
-      });
-      entry?.markNeedsBuild();
-    }
+    overlayState?.setState(() {
+      floatPosition = getIdealPosition();
+    });
   }
 
   void hideMenu() async {
@@ -233,7 +224,6 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
       setState(() {
         floatPosition = null;
       });
-      await _animationController.reverse();
       entry?.remove();
     }
   }
@@ -243,16 +233,10 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
   //   super.didUpdateWidget(oldWidget);
   // }
 
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 300));
-    _expandAnimation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.ease,
-    );
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
