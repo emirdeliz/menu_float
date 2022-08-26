@@ -7,7 +7,7 @@ jobs:
       image: emirdeliz/flutter
     steps:
       - name: Installing unison & eugenmayer/dockersync/unox
-        run: brew install unison && brew install eugenmayer/dockersync/unox
+        run: brew install docker && brew install unison && brew install eugenmayer/dockersync/unox
   test:
     runs-on: macos-10.15
     needs: docker-sync
