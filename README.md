@@ -1,5 +1,7 @@
 # menu_float
 
+[![Menu Float Actions](https://github.com/emirdeliz/menu_float/actions/workflows/main.yml/badge.svg)](https://github.com/emirdeliz/menu_float/actions/workflows/main.yml)
+
 This widget makes a floating menu appear in the window when clicking on another widget, like a button or link, for example.
 
 ## Getting Started
