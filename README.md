@@ -78,10 +78,10 @@ For more details see the project demo in the [example
 
 About the props:
 
-| **Prop**  | **Type** | **Description**|
+| **Prop**  | **Type** | **Description** |
 |-----------|----------|---------------------------------------------------------------------|
-| **top**   | boolean | Define the priority to open the menu on top of the trigger. |
-| **left**  | boolean | Define the priority to open the menu on left of the trigger. |
+| **top** | boolean | Define the priority to open the menu on top of the trigger. |
+| **left** | boolean | Define the priority to open the menu on left of the trigger. |
 | **right** | boolean | Define the priority to open the menu on right of the trigger. |
 | **child** | Widget | Trigger widget (like ElevatedButton, Text and etc...). |
 | **items** | List<MenuFloatOption<T>> | Menu options. |
