@@ -6,10 +6,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          image: eugenmayer/unison:2.51.3-4.12.0-ARM64
-    container: 
-      image: emirdeliz/flutter
+        container: 
+          image: [emirdeliz/flutter, eugenmayer/unison:2.51.3-4.12.0-ARM64]
     steps:
       - name: Starting docker-sync and docker-compose
         run: docker-sync-stack start
