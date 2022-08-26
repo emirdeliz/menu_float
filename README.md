@@ -1,40 +1,52 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# menu_float
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+This library makes a floating menu appear in the window when clicking on another widget, like a button or link, for example.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
+## Getting Started
+The use is very simple. The menu float receives a generic object to determine what object it has to send after the options click.
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+```
+class Product {
+	final String name;
+  final double value;
+	...
+}
 
-## Features
+final options = [
+	MenuFloatOption<T>(
+		label: e.name,
+		value: e,
+		onClick: (Product v) {
+			final n = v.name;
+			print('Product is: $n');
+		})
+	),
+	...
+]
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
+MenuFloat<Product>(
+	title: 'Hello menu float',
+	items: options,
+	child: ElevatedButton(
+    onPressed: () => {}, 
+		child: const Text('Click me')
+	),
+))
 ```
 
-## Additional information
+For more details see the project demo in the [example
+](https://github.com/emirdeliz/menu_float/tree/master/example/menu_float_demo) folder.
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
-# Menu Float
+**readBarcodeFromStack**: This method receives a ReadBarcodeProps and inserts the request on the stack of requests. This can be utils when you make multiple barcodes reads at the same.
+
+**readBarcode**: This method receives a ReadBarcodeProps and makes a simple read.
+
+About **ReadBarcodeProps**:
+
+**file** (optional): The file related to pdf file.
+
+**filePath** (optional): The url related to pdf file.
+
+**scale** (optional): The scale or zoom applied on the pdf document before search barcode.
+
+**sequenceNum** (optional): The sequence number of the image when working with multiple barcodes.
