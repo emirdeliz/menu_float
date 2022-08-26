@@ -45,7 +45,7 @@ This library makes a floating menu appear in the window when clicking on another
 ## Getting Started
 The use is very simple. The menu float receives a generic object to determine what object it has to send after the options click.
 
-```
+```dart
 class Product {
   final String name;
   final double value;
