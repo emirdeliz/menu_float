@@ -74,7 +74,7 @@ MenuFloat<Product>(
 ```
 
 For more details see the project demo in the [example
-](https://github.com/emirdeliz/menu_float/tree/master/example/menu_float_demo) folder.
+](https://github.com/emirdeliz/menu_float/tree/master/example/menu_float_demo)folder.
 
 About the props:
 
