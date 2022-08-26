@@ -7,29 +7,29 @@ The use is very simple. The menu float receives a generic object to determine wh
 
 ```
 class Product {
-	final String name;
+  final String name;
   final double value;
-	...
+  ...
 }
 
 final options = [
-	MenuFloatOption<T>(
-		label: e.name,
-		value: e,
-		onClick: (Product v) {
-			final n = v.name;
-			print('Product is: $n');
-		})
-	),
-	...
+  MenuFloatOption<T>(
+    label: e.name,
+    value: e,
+    onClick: (Product v) {
+      final n = v.name;
+      print('Product is: $n');
+    })
+  ),
+  ...
 ]
 
 MenuFloat<Product>(
-	items: options,
-	child: ElevatedButton(
+  items: options,
+  child: ElevatedButton(
     onPressed: () => {}, 
-		child: const Text('Click me')
-	),
+    child: const Text('Click me')
+  ),
 ))
 ```
 
@@ -47,29 +47,29 @@ The use is very simple. The menu float receives a generic object to determine wh
 
 ```
 class Product {
-	final String name;
+  final String name;
   final double value;
-	...
+  ...
 }
 
 final options = [
-	MenuFloatOption<T>(
-		label: e.name,
-		value: e,
-		onClick: (Product v) {
-			final n = v.name;
-			print('Product is: $n');
-		})
-	),
-	...
+  MenuFloatOption<T>(
+    label: e.name,
+    value: e,
+    onClick: (Product v) {
+      final n = v.name;
+      print('Product is: $n');
+    })
+  ),
+  ...
 ]
 
 MenuFloat<Product>(
-	items: options,
-	child: ElevatedButton(
+  items: options,
+  child: ElevatedButton(
     onPressed: () => {}, 
-		child: const Text('Click me')
-	),
+    child: const Text('Click me')
+  ),
 ))
 ```
 
