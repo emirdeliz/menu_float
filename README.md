@@ -5,46 +5,6 @@ This widget makes a floating menu appear in the window when clicking on another 
 ## Getting Started
 The use is very simple. The menu float receives a generic object to determine what object it has to send after the options click.
 
-```
-class Product {
-  final String name;
-  final double value;
-  ...
-}
-
-final options = [
-  MenuFloatOption<T>(
-    label: e.name,
-    value: e,
-    onClick: (Product v) {
-      final n = v.name;
-      print('Product is: $n');
-    })
-  ),
-  ...
-]
-
-MenuFloat<Product>(
-  items: options,
-  child: ElevatedButton(
-    onPressed: () => {}, 
-    child: const Text('Click me')
-  ),
-))
-```
-
-For more details see the project demo in the [example
-](https://github.com/emirdeliz/menu_float/tree/master/example/menu_float_demo) folder.
-
-About the props:
-
-# menu_float
-
-This library makes a floating menu appear in the window when clicking on another widget, like a button or link, for example.
-
-## Getting Started
-The use is very simple. The menu float receives a generic object to determine what object it has to send after the options click.
-
 ```dart
 class Product {
   final String name;
