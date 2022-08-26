@@ -35,24 +35,17 @@ class MenuFloatAppTest extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MediaQuery(
-        data: const MediaQueryData(size: Size(landscapeWidth, landscapeHeight)),
-        child: Directionality(
-            textDirection: TextDirection.ltr,
-            child: Overlay(initialEntries: <OverlayEntry>[
-              OverlayEntry(builder: (BuildContext context) {
-                return Stack(children: <Widget>[
-                  MenuFloatAppTestPage(
-                    target: target,
-                    x: x,
-                    y: y,
-                    top: top,
-                    left: left,
-                    right: right,
-                  )
-                ]);
-              })
-            ])));
+    return MaterialApp(
+        home: Stack(children: <Widget>[
+      MenuFloatAppTestPage(
+        target: target,
+        x: x,
+        y: y,
+        top: top,
+        left: left,
+        right: right,
+      )
+    ]));
   }
 }
 

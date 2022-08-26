@@ -46,7 +46,7 @@ class MenuFloat<T> extends StatefulWidget {
 
 class _MenuFloatState<T> extends State<MenuFloat<T>>
     with SingleTickerProviderStateMixin {
-  int randomKey = Random().nextInt(100000);
+  late int randomKey = Random().nextInt(100000);
   late GlobalObjectKey targetKey =
       GlobalObjectKey<_MenuFloatState<T>>('target-key-$randomKey');
   late GlobalObjectKey menuKey =
@@ -159,52 +159,54 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     }
 
     OverlayState? overlayState = Overlay.of(context);
-    entry = OverlayEntry(builder: (context) {
-      return Positioned(
-          left: floatPosition?.left,
-          top: floatPosition?.top,
-          child: MouseRegion(
-              onExit: (PointerExitEvent e) {
-                setState(() {
-                  hasMenuFocus = false;
-                });
-                hideMenu();
-              },
-              onEnter: (PointerEnterEvent e) {
-                setState(() {
-                  hasMenuFocus = true;
-                });
-              },
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Opacity(
-                  opacity: floatPosition != null ? 1 : 0,
-                  child: Container(
-                      // width: floatPosition != null ? null : 0,
-                      // height: floatPosition != null ? null : 0,
-                      key: menuKey,
-                      constraints: const BoxConstraints(
-                          maxWidth: menuFloatMaxWidth,
-                          maxHeight: menuFloatMaxHeight),
-                      decoration: BoxDecoration(
-                        color: Colors.white24,
-                        borderRadius: BorderRadius.circular(4),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 5,
-                            offset: Offset(-1, 3),
+    entry = OverlayEntry(
+        maintainState: true,
+        builder: (context) {
+          return Positioned(
+              left: floatPosition?.left,
+              top: floatPosition?.top,
+              child: MouseRegion(
+                  onExit: (PointerExitEvent e) {
+                    setState(() {
+                      hasMenuFocus = false;
+                    });
+                    hideMenu();
+                  },
+                  onEnter: (PointerEnterEvent e) {
+                    setState(() {
+                      hasMenuFocus = true;
+                    });
+                  },
+                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    Opacity(
+                      opacity: floatPosition != null ? 1 : 0,
+                      child: Container(
+                          // width: floatPosition != null ? null : 0,
+                          // height: floatPosition != null ? null : 0,
+                          key: menuKey,
+                          constraints: const BoxConstraints(
+                              maxWidth: menuFloatMaxWidth,
+                              maxHeight: menuFloatMaxHeight),
+                          decoration: BoxDecoration(
+                            color: Colors.white24,
+                            borderRadius: BorderRadius.circular(4),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 5,
+                                offset: Offset(-1, 3),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: Material(
-                          child: ListView(
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        children: buildMenuFloatItems(),
-                      ))),
-                )
-              ])));
-    });
+                          child: Material(
+                              child: ListView(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            children: buildMenuFloatItems(),
+                          ))),
+                    )
+                  ])));
+        });
     overlayState?.insert(entry!);
     await setFloatPosition(overlayState);
   }
@@ -215,7 +217,6 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
       await setFloatPosition(overlayState);
       return;
     }
-    await Future.delayed(const Duration(milliseconds: 100));
     overlayState?.setState(() {
       floatPosition = getIdealPosition();
     });
@@ -230,16 +231,6 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
       entry?.remove();
     }
   }
-
-  // @override
-  // void didUpdateWidget(covariant MenuFloat<T> oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  // }
 
   @override
   Widget build(BuildContext context) {
