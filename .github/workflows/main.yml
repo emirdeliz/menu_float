@@ -10,7 +10,7 @@ jobs:
         run: docker-sync start
   test:
     runs-on: ubuntu-latest
-    needs: docker_sync
+    needs: docker-sync
     container: 
       image: emirdeliz/flutter
     steps:
