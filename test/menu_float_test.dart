@@ -25,11 +25,29 @@ Future<void> initializeAndTapAtPosition(
 }
 
 void main() {
-  testWidgets('have menu for the button', (tester) async {
-    TestWidgetsFlutterBinding.ensureInitialized();
-    await initializeAndTapAtPosition(tester, 0, 0, 40, 15);
+  group('menu float: left', () {
+    testWidgets('have menu for the button on top-left', (tester) async {
+      TestWidgetsFlutterBinding.ensureInitialized();
+      await initializeAndTapAtPosition(tester, 0, 0, 40, 15);
 
-    final menu = find.text(titleOptionMenu);
-    expect(menu, findsOneWidget);
+      final menu = find.text(titleOptionMenu);
+      expect(menu, findsOneWidget);
+    });
+
+    testWidgets('have menu for the button on center-left', (tester) async {
+      TestWidgetsFlutterBinding.ensureInitialized();
+      await initializeAndTapAtPosition(tester, 40, 400, 40, 415);
+
+      final menu = find.text(titleOptionMenu);
+      expect(menu, findsOneWidget);
+    });
+
+    testWidgets('have menu for the button on bottom-left', (tester) async {
+      TestWidgetsFlutterBinding.ensureInitialized();
+      await initializeAndTapAtPosition(tester, 40, 730, 40, 745);
+
+      final menu = find.text(titleOptionMenu);
+      expect(menu, findsOneWidget);
+    });
   });
 }
