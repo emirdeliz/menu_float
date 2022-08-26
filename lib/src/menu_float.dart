@@ -24,7 +24,6 @@ class MenuFloatIdealPosition extends MenuFloatPosition {
 
 class MenuFloat<T> extends StatefulWidget {
   final Widget child;
-  final String title;
   final List<MenuFloatOption<T>> items;
   final bool top;
   final bool left;
@@ -36,7 +35,6 @@ class MenuFloat<T> extends StatefulWidget {
       this.left = false,
       this.right = false,
       required this.child,
-      required this.title,
       required this.items})
       : super(key: key);
 
@@ -47,13 +45,13 @@ class MenuFloat<T> extends StatefulWidget {
 class _MenuFloatState<T> extends State<MenuFloat<T>>
     with SingleTickerProviderStateMixin {
   late int randomKey = Random().nextInt(100000);
-  late GlobalObjectKey targetKey =
-      GlobalObjectKey<_MenuFloatState<T>>('target-key-$randomKey');
+  late GlobalObjectKey triggerKey =
+      GlobalObjectKey<_MenuFloatState<T>>('trigger-key-$randomKey');
   late GlobalObjectKey menuKey =
       GlobalObjectKey<_MenuFloatState<T>>('menu-key-$randomKey');
 
   MenuFloatPosition? floatPosition;
-  bool hasTargetFocus = false;
+  bool hasTriggerFocus = false;
   bool hasMenuFocus = false;
   OverlayEntry? entry;
 
@@ -72,8 +70,8 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     final menuPositionAndSize = getWidgetPositionAndSizeRelativeToWindow(
         menuKey.currentContext?.findRenderObject() as RenderBox);
 
-    final targetPositionAndSize = getWidgetPositionAndSizeRelativeToWindow(
-        targetKey.currentContext?.findRenderObject() as RenderBox);
+    final triggerPositionAndSize = getWidgetPositionAndSizeRelativeToWindow(
+        triggerKey.currentContext?.findRenderObject() as RenderBox);
 
     final overflowLeft = style.left - menuPositionAndSize.width;
     final hasOverflowLeft = overflowLeft < 0;
@@ -93,7 +91,7 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     final overflowTop = style.top - menuPositionAndSize.height;
     final hasOverflowTop = overflowTop < 0;
     if (hasOverflowTop) {
-      style.top = targetPositionAndSize.height;
+      style.top = triggerPositionAndSize.height;
     }
 
     final windowHeight = MediaQuery.of(context).size.height;
@@ -103,34 +101,34 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
 
     if (hasOverflowBottom) {
       style.top =
-          targetPositionAndSize.top - menuPositionAndSize.height - offset * 2;
+          triggerPositionAndSize.top - menuPositionAndSize.height - offset * 2;
     }
     return style;
   }
 
   MenuFloatPosition getIdealPosition() {
-    final targetPositionAndSize = getWidgetPositionAndSizeRelativeToWindow(
-        targetKey.currentContext?.findRenderObject() as RenderBox);
+    final triggerPositionAndSize = getWidgetPositionAndSizeRelativeToWindow(
+        triggerKey.currentContext?.findRenderObject() as RenderBox);
 
     MenuFloatPosition style = MenuFloatPosition(top: 0, left: 0);
     if (widget.right) {
       style.left =
-          targetPositionAndSize.left - menuFloatMaxWidth - (offset * 2);
-      style.top = targetPositionAndSize.top - menuFloatMaxHeight / 2;
+          triggerPositionAndSize.left - menuFloatMaxWidth - (offset * 2);
+      style.top = triggerPositionAndSize.top - menuFloatMaxHeight / 2;
     } else if (widget.left) {
-      style.left = targetPositionAndSize.left +
-          targetPositionAndSize.width +
+      style.left = triggerPositionAndSize.left +
+          triggerPositionAndSize.width +
           (offset * 2);
-      style.top = targetPositionAndSize.top - menuFloatMaxHeight / 2;
+      style.top = triggerPositionAndSize.top - menuFloatMaxHeight / 2;
     } else if (widget.top) {
-      style.left = targetPositionAndSize.left;
-      style.top = targetPositionAndSize.top -
-          (menuFloatMaxHeight - targetPositionAndSize.height) +
+      style.left = triggerPositionAndSize.left;
+      style.top = triggerPositionAndSize.top -
+          (menuFloatMaxHeight - triggerPositionAndSize.height) +
           offset;
     } else {
-      style.left = targetPositionAndSize.left;
-      style.top = targetPositionAndSize.top +
-          targetPositionAndSize.height +
+      style.left = triggerPositionAndSize.left;
+      style.top = triggerPositionAndSize.top +
+          triggerPositionAndSize.height +
           (offset * 2);
     }
 
@@ -224,7 +222,7 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
 
   void hideMenu() async {
     await Future.delayed(const Duration(milliseconds: 300));
-    if (!hasTargetFocus && !hasMenuFocus && entry != null && entry!.mounted) {
+    if (!hasTriggerFocus && !hasMenuFocus && entry != null && entry!.mounted) {
       setState(() {
         floatPosition = null;
       });
@@ -235,7 +233,7 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
   @override
   Widget build(BuildContext context) {
     return Container(
-        key: targetKey,
+        key: triggerKey,
         child: GestureDetector(
             child: MouseRegion(
                 cursor: SystemMouseCursors.click,
@@ -245,12 +243,12 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
                 ),
                 onEnter: (PointerEnterEvent e) {
                   setState(() {
-                    hasTargetFocus = true;
+                    hasTriggerFocus = true;
                   });
                 },
                 onExit: (PointerExitEvent e) {
                   setState(() {
-                    hasTargetFocus = false;
+                    hasTriggerFocus = false;
                   });
                   hideMenu();
                 }),

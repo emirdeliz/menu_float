@@ -3,14 +3,14 @@ import 'package:flutter_test/flutter_test.dart';
 // ignore: avoid_relative_lib_imports
 import '../example/menu_float_demo/lib/menu_float_app.dart';
 
-const String titleWidgetTarget = 'Click me';
+const String titleWidgetTrigger = 'Click me';
 const String titleOptionMenu = 'Telefone';
 const double landscapeWidth = 1024;
 const double landscapeHeight = 768;
 
-Widget makeTargetButton() {
+Widget makeTriggerButton() {
   return ElevatedButton(
-      onPressed: () => {}, child: const Text(titleWidgetTarget));
+      onPressed: () => {}, child: const Text(titleWidgetTrigger));
 }
 
 void setWindowSize(Size size) {
@@ -23,9 +23,9 @@ void setWindowSize(Size size) {
 Future<void> initializeAndTapAtPosition(
     WidgetTester tester, double x, double y, double tapX, double tapY) async {
   setWindowSize(const Size(landscapeWidth, landscapeHeight));
-  final target = makeTargetButton();
+  final trigger = makeTriggerButton();
   await tester
-      .pumpWidget(MenuFloatAppTest(target: target, x: x, y: y, right: true));
+      .pumpWidget(MenuFloatAppTest(trigger: trigger, x: x, y: y, right: true));
   await tester.pumpAndSettle();
 
   await tester.tapAt(Offset(tapX, tapY));
