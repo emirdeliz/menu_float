@@ -6,6 +6,8 @@ jobs:
     container: 
       image: emirdeliz/flutter
     steps:
+      - name: Pulling eugenmayer/unison
+        run: docker pull eugenmayer/unison:2.51.3-4.12.0-ARM64
       - name: Starting docker-sync and docker-compose
         run: docker-sync-stack start
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
