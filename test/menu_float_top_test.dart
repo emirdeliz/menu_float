@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'menu_float_app.dart';
+// ignore: avoid_relative_lib_imports
+import '../example/menu_float_demo/lib/menu_float_app.dart';
 
 const String titleWidgetTarget = 'Click me';
 const String titleOptionMenu = 'Telefone';
