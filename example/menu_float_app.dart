@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:menu_float/menu_float.dart';
 
-import '__mock__/menu_float.mock.dart';
+import '../test/__mock__/menu_float.mock.dart';
 
 const double landscapeWidth = 1024;
 const double landscapeHeight = 768;
