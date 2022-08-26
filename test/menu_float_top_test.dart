@@ -24,7 +24,8 @@ Future<void> initializeAndTapAtPosition(
     WidgetTester tester, double x, double y, double tapX, double tapY) async {
   setWindowSize(const Size(landscapeWidth, landscapeHeight));
   final target = makeTargetButton();
-  await tester.pumpWidget(MenuFloatAppTest(target: target, x: x, y: y));
+  await tester
+      .pumpWidget(MenuFloatAppTest(target: target, x: x, y: y, top: true));
   await tester.pumpAndSettle();
 
   await tester.tapAt(Offset(tapX, tapY));
@@ -33,7 +34,7 @@ Future<void> initializeAndTapAtPosition(
 }
 
 void main() {
-  group('menu float: with y = 0', () {
+  group('menu float top: with y = 0', () {
     testWidgets('have menu for the button on top-left', (tester) async {
       TestWidgetsFlutterBinding.ensureInitialized();
       await initializeAndTapAtPosition(tester, 0, 0, 40, 15);
@@ -81,7 +82,7 @@ void main() {
     });
   });
 
-  group('menu float top: with y = 0', () {
+  group('menu float top: with y = 730', () {
     testWidgets('have menu for the button on bottom-left', (tester) async {
       TestWidgetsFlutterBinding.ensureInitialized();
       await initializeAndTapAtPosition(tester, 0, 730, 40, 745);
