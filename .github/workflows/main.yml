@@ -1,16 +1,19 @@
 name: Menu Float Actions
 on: [push]
 jobs:
+  docker-sync:
+    runs-on: ubuntu-latest
+    container:
+      image: eugenmayer/unison:2.51.3-4.12.0-ARM64
+    steps:
+      - name: Starting docker-sync
+        run: docker-sync start
   test:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        container: 
-          image: [emirdeliz/flutter, eugenmayer/unison:2.51.3-4.12.0-ARM64]
+    container: 
+      image: emirdeliz/flutter
     steps:
-      - name: Starting docker-sync and docker-compose
-        run: docker-sync-stack start
+      - uses: docker-sync
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
