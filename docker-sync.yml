@@ -1,7 +1,7 @@
 version: "2"
 options:
   # optional, default: docker-compose.yml if you like, you can set a custom location (path) of your compose file
-  compose-file-path: './menu_float/docker-compose.yml'
+  compose-file-path: './docker-compose.yml'
   # optional, activate this if you need to debug something, default is false
   verbose: true
   # can be docker-sync, thor or auto and defines, how the sync will be invoked on the cli. Mostly depending if your are using docker-sync solo, scaffolded or in development ( thor )
@@ -21,7 +21,7 @@ options:
   # rsync_image: emirdeliz/eugenmayer-rsync-arm-64:latest
 syncs:
   #IMPORTANT: ensure this name is unique and does not match your other application container name
-  appcode-unison-rsync-sync: #tip: add -sync and you keep consistent names as a convention
+  menu-float-native-osx-sync: #tip: add -sync and you keep consistent names as a convention
     # Operating system aware sync strategy.
     sync_strategy: native_osx
 

@@ -11,8 +11,8 @@ services:
     stdin_open: true
     ipc: host
     volumes:
-      - appcode-unison-sync:/home/docker/apps:nocopy
+      - appcode-sync:/home/docker/apps:nocopy
 
 volumes:
-  appcode-unison-sync:
-    name: appcode-unison-rsync-sync
+  appcode-sync:
+    name: menu-float-native-osx-sync
