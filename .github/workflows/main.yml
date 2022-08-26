@@ -2,6 +2,9 @@ name: Menu Float Actions
 on: [push]
 jobs:
   test:
+    runs-on: ubuntu-latest
+    container: 
+      image: emirdeliz/flutter
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
