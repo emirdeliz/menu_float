@@ -23,8 +23,10 @@
 	"extensions": [
 		"dart-code.dart-code",
 		"dart-code.flutter",
-		"Shan.code-settings-sync", 
-		"xyz.local-history"
+		"Shan.code-settings-sync",
+		"xyz.local-history",
+		"Dart-Code.flutter",
+		"Dart-Code.dart-code"
 	],
 	// "postAttachCommand": "bash",
 

@@ -23,13 +23,13 @@ syncs:
   #IMPORTANT: ensure this name is unique and does not match your other application container name
   appcode-unison-rsync-sync: #tip: add -sync and you keep consistent names as a convention
     # Operating system aware sync strategy.
-    # sync_strategy: native_osx
+    sync_strategy: native_osx
 
     # Operating system aware sync strategy.
     # sync_strategy: 'unison'
 
     # Operating system aware sync strategy.
-    sync_strategy: 'rsync'
+    # sync_strategy: 'rsync'
 
     # When a port of a container is exposed, on which IP does it get exposed. Localhost for docker for mac, something else for docker-machine.
     sync_host_ip: 'localhost'
