@@ -1,0 +1,4 @@
+runs:
+  using: 'docker'
+  image: 'emirdeliz/flutter'
+  main: menu-float-test
