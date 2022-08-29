@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'menu_float_app.dart';
 
-const String titleWidgetTrigger = 'Click me';
+const String titleWidgetTrigger = 'Button Target';
 const double landscapeWidth = 1024;
 const double landscapeHeight = 769;
 

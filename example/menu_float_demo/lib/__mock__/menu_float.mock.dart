@@ -7,9 +7,9 @@ class Product {
 }
 
 final productMock = <Product>[
-  Product('Telefone', 'Telefone', 332.22),
-  Product('Celular', 'Celular', 332.22),
-  Product('Impressora', 'Impressora', 332.22),
-  Product('Fax', 'Fax', 332.22),
-  Product('Caneta', 'Caneta', 332.22),
+  Product('Phone', 'Phone', 332.22),
+  Product('Mobile phone', 'Mobile phone', 32.22),
+  Product('Tv', 'Tv', 456.33),
+  Product('Stereo system', 'Stereo system', 362.21),
+  Product('Portable radio', 'Portable radio', 132.00),
 ];
