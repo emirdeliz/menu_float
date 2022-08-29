@@ -4,7 +4,7 @@
 
 This widget makes a floating menu appear in the window when clicking on another widget, like a button or link, for example.
 
-<img src="https://github.com/emirdeliz/menu_float/blob/master/assets/example.gif" width="300" height="auto" alt="Menu float - example"/>
+<img src="https://raw.githubusercontent.com/emirdeliz/menu_float/master/assets/example.gif" width="300" height="auto" alt="Menu float - example"/>
 
 ## Getting Started
 The use is very simple. The menu float receives a generic object to determine what object it has to send after the options click.
