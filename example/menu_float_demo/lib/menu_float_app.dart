@@ -5,17 +5,9 @@ import 'package:menu_float/menu_float.dart';
 
 import '__mock__/menu_float.mock.dart';
 
-final menusOptions = productMock.map<MenuFloatOption<Product>>((e) {
-  return MenuFloatOption<Product>(
-      label: e.name,
-      value: e,
-      onClick: (Product v) {
-        print(v.name);
-      });
-}).toList();
+const String titleWidgetTrigger = 'Button Target';
 
 class MenuFloatAppTest extends StatelessWidget {
-  final Widget trigger;
   final bool top;
   final bool left;
   final bool right;
@@ -24,7 +16,6 @@ class MenuFloatAppTest extends StatelessWidget {
 
   const MenuFloatAppTest({
     Key? key,
-    required this.trigger,
     this.top = false,
     this.left = false,
     this.right = false,
@@ -37,7 +28,6 @@ class MenuFloatAppTest extends StatelessWidget {
     return MaterialApp(
         home: Stack(children: <Widget>[
       MenuFloatAppTestPage(
-        trigger: trigger,
         x: x,
         y: y,
         top: top,
@@ -54,11 +44,9 @@ class MenuFloatAppTestPage extends StatefulWidget {
   final bool right;
   final double x;
   final double y;
-  final Widget trigger;
 
   const MenuFloatAppTestPage(
       {Key? key,
-      required this.trigger,
       required this.x,
       required this.y,
       this.top = false,
@@ -71,6 +59,28 @@ class MenuFloatAppTestPage extends StatefulWidget {
 }
 
 class _MenuFloatAppTestPageState extends State<MenuFloatAppTestPage> {
+  String? selectedValue;
+
+  List<MenuFloatOption<Product>> makeMenuOptions() {
+    final menusOptions = productMock.map<MenuFloatOption<Product>>((e) {
+      return MenuFloatOption<Product>(
+          label: Text(e.name,
+              style: const TextStyle(color: Colors.black, fontSize: 12)),
+          value: e,
+          onClick: (Product v) {
+            setState(() {
+              selectedValue = e.name;
+            });
+          });
+    }).toList();
+    return menusOptions;
+  }
+
+  Widget makeTriggerButton() {
+    return ElevatedButton(
+        onPressed: () => {}, child: Text(selectedValue ?? titleWidgetTrigger));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -79,11 +89,11 @@ class _MenuFloatAppTestPageState extends State<MenuFloatAppTestPage> {
       child: Container(
           alignment: Alignment.center,
           child: MenuFloat<Product>(
-            items: menusOptions,
+            items: makeMenuOptions(),
             top: widget.top,
             left: widget.left,
             right: widget.right,
-            child: widget.trigger,
+            child: makeTriggerButton(),
           )),
     );
   }

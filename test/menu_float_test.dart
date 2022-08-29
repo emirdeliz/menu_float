@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../example/menu_float_demo/lib/menu_float_app.dart';
 
 const String titleWidgetTrigger = 'Click me';
-const String titleOptionMenu = 'Telefone';
+const String titleOptionMenu = 'Mobile phone';
 const double landscapeWidth = 1024;
 const double landscapeHeight = 768;
 
@@ -23,8 +23,7 @@ void setWindowSize(Size size) {
 Future<void> initializeAndTapAtPosition(
     WidgetTester tester, double x, double y, double tapX, double tapY) async {
   setWindowSize(const Size(landscapeWidth, landscapeHeight));
-  final trigger = makeTriggerButton();
-  await tester.pumpWidget(MenuFloatAppTest(trigger: trigger, x: x, y: y));
+  await tester.pumpWidget(MenuFloatAppTest(x: x, y: y));
   await tester.pumpAndSettle();
 
   await tester.tapAt(Offset(tapX, tapY));
@@ -40,6 +39,10 @@ void main() {
 
       final menu = find.text(titleOptionMenu);
       expect(menu, findsOneWidget);
+
+      await tester.tap(menu);
+      await tester.pumpAndSettle();
+      expect(find.text(titleOptionMenu), findsOneWidget);
     });
 
     testWidgets('have menu for the button on top-left', (tester) async {
@@ -47,6 +50,10 @@ void main() {
 
       final menu = find.text(titleOptionMenu);
       expect(menu, findsOneWidget);
+
+      await tester.tap(menu);
+      await tester.pumpAndSettle();
+      expect(find.text(titleOptionMenu), findsOneWidget);
     });
 
     testWidgets('have menu for the button on top-left', (tester) async {
@@ -54,6 +61,10 @@ void main() {
 
       final menu = find.text(titleOptionMenu);
       expect(menu, findsOneWidget);
+
+      await tester.tap(menu);
+      await tester.pumpAndSettle();
+      expect(find.text(titleOptionMenu), findsOneWidget);
     });
   });
 
@@ -64,6 +75,10 @@ void main() {
 
       final menu = find.text(titleOptionMenu);
       expect(menu, findsOneWidget);
+
+      await tester.tap(menu);
+      await tester.pumpAndSettle();
+      expect(find.text(titleOptionMenu), findsOneWidget);
     });
 
     testWidgets('have menu for the button on center-left', (tester) async {
@@ -71,6 +86,10 @@ void main() {
 
       final menu = find.text(titleOptionMenu);
       expect(menu, findsOneWidget);
+
+      await tester.tap(menu);
+      await tester.pumpAndSettle();
+      expect(find.text(titleOptionMenu), findsOneWidget);
     });
 
     testWidgets('have menu for the button on center-left', (tester) async {
@@ -78,6 +97,10 @@ void main() {
 
       final menu = find.text(titleOptionMenu);
       expect(menu, findsOneWidget);
+
+      await tester.tap(menu);
+      await tester.pumpAndSettle();
+      expect(find.text(titleOptionMenu), findsOneWidget);
     });
   });
 
@@ -88,6 +111,10 @@ void main() {
 
       final menu = find.text(titleOptionMenu);
       expect(menu, findsOneWidget);
+
+      await tester.tap(menu);
+      await tester.pumpAndSettle();
+      expect(find.text(titleOptionMenu), findsOneWidget);
     });
 
     testWidgets('have menu for the button on bottom-left', (tester) async {
@@ -95,6 +122,10 @@ void main() {
 
       final menu = find.text(titleOptionMenu);
       expect(menu, findsOneWidget);
+
+      await tester.tap(menu);
+      await tester.pumpAndSettle();
+      expect(find.text(titleOptionMenu), findsOneWidget);
     });
 
     testWidgets('have menu for the button on bottom-left', (tester) async {
@@ -102,6 +133,10 @@ void main() {
 
       final menu = find.text(titleOptionMenu);
       expect(menu, findsOneWidget);
+
+      await tester.tap(menu);
+      await tester.pumpAndSettle();
+      expect(find.text(titleOptionMenu), findsOneWidget);
     });
   });
 }

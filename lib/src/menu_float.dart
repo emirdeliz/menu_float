@@ -141,6 +141,10 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
       return ListTile(
         title: MenuFloatItem<T>(option: e),
         onTap: () {
+          setState(() {
+            hasMenuFocus = false;
+          });
+          hideMenu(asyncClose: false);
           if (onClick != null) {
             onClick(e.value);
           }
@@ -220,13 +224,15 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     });
   }
 
-  void hideMenu() async {
-    await Future.delayed(const Duration(milliseconds: 300));
+  void hideMenu({bool asyncClose = true}) async {
+    if (asyncClose) {
+      await Future.delayed(const Duration(milliseconds: 300));
+    }
     if (!hasTriggerFocus && !hasMenuFocus && entry != null && entry!.mounted) {
+      entry?.remove();
       setState(() {
         floatPosition = null;
       });
-      entry?.remove();
     }
   }
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'menu_float_app.dart';
 
-const String titleWidgetTrigger = 'Button Target';
 const double landscapeWidth = 1024;
 const double landscapeHeight = 769;
 
@@ -10,15 +9,7 @@ void main() {
   runApp(const MenuFloatDemo());
 }
 
-Widget makeTriggerButton() {
-  return ElevatedButton(
-      onPressed: () => {}, child: const Text(titleWidgetTrigger));
-}
-
-final trigger = makeTriggerButton();
-
 class MenuFloatAppDemo extends StatelessWidget {
-  final Widget trigger;
   final bool top;
   final bool left;
   final bool right;
@@ -27,7 +18,6 @@ class MenuFloatAppDemo extends StatelessWidget {
 
   const MenuFloatAppDemo({
     Key? key,
-    required this.trigger,
     this.top = false,
     this.left = false,
     this.right = false,
@@ -37,8 +27,7 @@ class MenuFloatAppDemo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuFloatAppTestPage(
-        trigger: trigger, x: x, y: y, top: top, left: left, right: right);
+    return MenuFloatAppTestPage(x: x, y: y, top: top, left: left, right: right);
   }
 }
 
@@ -50,19 +39,19 @@ class MenuFloatDemo extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       home: Stack(
-        children: [
+        children: const [
           // y: 0
-          MenuFloatAppDemo(trigger: trigger, x: 0, y: 0),
-          MenuFloatAppDemo(trigger: trigger, x: 500, y: 0),
-          MenuFloatAppDemo(trigger: trigger, x: 930, y: 0),
+          MenuFloatAppDemo(x: 0, y: 0),
+          MenuFloatAppDemo(x: 500, y: 0),
+          MenuFloatAppDemo(x: 930, y: 0),
           // y: 400
-          MenuFloatAppDemo(trigger: trigger, x: 0, y: 400),
-          MenuFloatAppDemo(trigger: trigger, x: 500, y: 400),
-          MenuFloatAppDemo(trigger: trigger, x: 930, y: 400),
+          MenuFloatAppDemo(x: 0, y: 400),
+          MenuFloatAppDemo(x: 500, y: 400),
+          MenuFloatAppDemo(x: 930, y: 400),
           // y: 730
-          MenuFloatAppDemo(trigger: trigger, x: 0, y: 730),
-          MenuFloatAppDemo(trigger: trigger, x: 500, y: 730),
-          MenuFloatAppDemo(trigger: trigger, x: 930, y: 730),
+          MenuFloatAppDemo(x: 0, y: 730),
+          MenuFloatAppDemo(x: 500, y: 730),
+          MenuFloatAppDemo(x: 930, y: 730),
         ],
       ),
     );

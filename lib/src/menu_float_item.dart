@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MenuFloatOption<T> {
-  final String label;
+  final Widget label;
   final T value;
   final Function(T v)? onClick;
 
@@ -23,8 +23,7 @@ class MenuFloatItem<T> extends StatelessWidget {
       alignment: Alignment.centerLeft,
       // decoration: BoxDecoration(
       //     color: Colors.white, border: Border.all(color: Colors.red)),
-      child: Text(option.label,
-          style: const TextStyle(color: Colors.black, fontSize: 12)),
+      child: option.label,
     );
   }
 }
