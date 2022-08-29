@@ -110,6 +110,8 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     final triggerPositionAndSize = getWidgetPositionAndSizeRelativeToWindow(
         triggerKey.currentContext?.findRenderObject() as RenderBox);
 
+    print(triggerPositionAndSize.height);
+
     MenuFloatPosition style = MenuFloatPosition(top: 0, left: 0);
     if (widget.right) {
       style.left =
