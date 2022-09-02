@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +80,7 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
       style.left = 0;
     }
 
-    final windowWidth = MediaQuery.of(context).size.width;
+    final windowWidth = window.physicalSize.width;
     final overflowRight =
         windowWidth - (style.left + menuPositionAndSize.width);
 
@@ -94,7 +95,7 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
       style.top = triggerPositionAndSize.height;
     }
 
-    final windowHeight = MediaQuery.of(context).size.height;
+    final windowHeight = window.physicalSize.height;
     final overflowBottom =
         windowHeight - (style.top + menuPositionAndSize.height);
     final hasOverflowBottom = overflowBottom < 0;
@@ -109,8 +110,6 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
   MenuFloatPosition getIdealPosition() {
     final triggerPositionAndSize = getWidgetPositionAndSizeRelativeToWindow(
         triggerKey.currentContext?.findRenderObject() as RenderBox);
-
-    print(triggerPositionAndSize.height);
 
     MenuFloatPosition style = MenuFloatPosition(top: 0, left: 0);
     if (widget.right) {
@@ -171,15 +170,19 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
               top: floatPosition?.top,
               child: MouseRegion(
                   onExit: (PointerExitEvent e) {
-                    setState(() {
-                      hasMenuFocus = false;
-                    });
-                    hideMenu();
+                    if (mounted) {
+                      setState(() {
+                        hasMenuFocus = false;
+                      });
+                      hideMenu();
+                    }
                   },
                   onEnter: (PointerEnterEvent e) {
-                    setState(() {
-                      hasMenuFocus = true;
-                    });
+                    if (mounted) {
+                      setState(() {
+                        hasMenuFocus = true;
+                      });
+                    }
                   },
                   child: Row(mainAxisSize: MainAxisSize.min, children: [
                     Opacity(
@@ -216,14 +219,16 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
   }
 
   Future<void> setFloatPosition(OverlayState? overlayState) async {
-    if (menuKey.currentContext == null) {
-      await Future.delayed(const Duration(milliseconds: 100));
-      await setFloatPosition(overlayState);
-      return;
+    if (mounted) {
+      if (menuKey.currentContext == null) {
+        await Future.delayed(const Duration(milliseconds: 100));
+        await setFloatPosition(overlayState);
+        return;
+      }
+      overlayState?.setState(() {
+        floatPosition = getIdealPosition();
+      });
     }
-    overlayState?.setState(() {
-      floatPosition = getIdealPosition();
-    });
   }
 
   void hideMenu({bool asyncClose = true}) async {
