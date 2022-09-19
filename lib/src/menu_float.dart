@@ -26,6 +26,8 @@ class MenuFloatIdealPosition extends MenuFloatPosition {
 class MenuFloat<T> extends StatefulWidget {
   final Widget child;
   final List<MenuFloatOption<T>> items;
+  final double? offsetTop;
+  final double? offsetLeft;
   final bool top;
   final bool left;
   final bool right;
@@ -35,6 +37,8 @@ class MenuFloat<T> extends StatefulWidget {
       this.top = false,
       this.left = false,
       this.right = false,
+      this.offsetTop = 0,
+      this.offsetLeft = 0,
       required this.child,
       required this.items})
       : super(key: key);
@@ -133,6 +137,8 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
           (offset * 2);
     }
 
+    style.top = style.top + (widget.offsetTop ?? 0);
+    style.left = style.left + (widget.offsetLeft ?? 0);
     return maybeCheckAndFixOverflow(style);
   }
 
