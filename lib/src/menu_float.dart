@@ -10,7 +10,6 @@ const double offset = 3;
 class MenuFloatPosition {
   double top;
   double left;
-
   MenuFloatPosition({required this.top, required this.left});
 }
 
@@ -62,6 +61,8 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
   bool hasMenuFocus = false;
   OverlayEntry? entry;
 
+  /// Get the info about the element relative to the window like positions x, y, width, and height.
+  /// Returns a MenuFloatIdealPosition.
   MenuFloatIdealPosition _getWidgetPositionAndSizeRelativeToWindow(
       BuildContext? menuKeyContext) {
     final RenderBox renderBox = menuKeyContext?.findRenderObject() as RenderBox;
@@ -75,6 +76,10 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
         top: top, left: left, width: width, height: height);
   }
 
+  /// Check if the menu position is outside of the window.
+  /// If true this means that the menu will be cut after opens.
+  /// To fix this the method calc a new position considering to point in the other direction.
+  /// Returns a MenuFloatPosition.
   MenuFloatPosition _maybeCheckAndFixOverflow(MenuFloatPosition style) {
     final menuPositionAndSize =
         _getWidgetPositionAndSizeRelativeToWindow(menuKey.currentContext);
@@ -118,6 +123,8 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     return style;
   }
 
+  /// Calculate the menu position and apply the fix if the position in on the outside of the window.
+  /// Returns a MenuFloatPosition.
   MenuFloatPosition _getIdealPosition() {
     final triggerPositionAndSize =
         _getWidgetPositionAndSizeRelativeToWindow(triggerKey.currentContext);
@@ -150,6 +157,8 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     return styleOverflow;
   }
 
+  /// Build a menu items to a ListTile.
+  /// Returns a List<ListTile>.
   List<ListTile> _buildMenuFloatItems() {
     List<ListTile> items = widget.items.map((e) {
       final onClick = e.onClick;
@@ -169,6 +178,8 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     return items;
   }
 
+  /// Insert the overlay element with the menu inside itself and set the menu position.
+  /// Returns Future<void>.
   Future<void> _showMenu() async {
     final hasMenuOnWindow = floatPosition != null;
     if (hasMenuOnWindow) {
@@ -232,6 +243,8 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     await _setFloatPosition(overlayState);
   }
 
+  /// Set the menu position. If the menu doesn't will be rendered yet await and call itself.
+  /// Returns Future<void>.
   Future<void> _setFloatPosition(OverlayState? overlayState) async {
     if (mounted) {
       if (menuKey.currentContext == null) {
@@ -245,6 +258,8 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     }
   }
 
+  /// Remove the overlay element with menu items.
+  /// The asyncClose specifies if depends on another async function. If true wait to finish.
   void _hideMenu({bool asyncClose = true}) async {
     if (asyncClose) {
       await Future.delayed(const Duration(milliseconds: 300));
