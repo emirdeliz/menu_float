@@ -1,6 +1,4 @@
 import 'dart:math';
-import 'dart:ui';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:menu_float/src/menu_float_item.dart';
@@ -66,13 +64,12 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
 
   MenuFloatIdealPosition _getWidgetPositionAndSizeRelativeToWindow(
       BuildContext? menuKeyContext) {
-    final RenderBox? renderBox =
-        menuKeyContext?.findRenderObject() as RenderBox;
-    final position = renderBox?.localToGlobal(Offset.zero);
-    final double top = position?.dy ?? 0;
-    final double left = position?.dx ?? 0;
-    final double width = renderBox?.size.width ?? 0;
-    final double height = renderBox?.size.height ?? 0;
+    final RenderBox renderBox = menuKeyContext?.findRenderObject() as RenderBox;
+    final position = renderBox.localToGlobal(Offset.zero);
+    final double top = position.dy;
+    final double left = position.dx;
+    final double width = renderBox.size.width;
+    final double height = renderBox.size.height;
 
     return MenuFloatIdealPosition(
         top: top, left: left, width: width, height: height);
@@ -85,14 +82,14 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     final triggerPositionAndSize =
         _getWidgetPositionAndSizeRelativeToWindow(triggerKey.currentContext);
 
-    final overflowWidth = 5.00;
+    const overflowWidth = 5.00;
     final overflowLeft = style.left - menuPositionAndSize.width;
     final hasOverflowLeft = overflowLeft - overflowWidth < 0;
     if (hasOverflowLeft) {
       style.left = overflowWidth;
     }
 
-    final windowWidth = window.physicalSize.width;
+    final windowWidth = MediaQuery.of(context).size.width;
     final overflowRight =
         windowWidth - (style.left + menuPositionAndSize.width);
 
@@ -102,22 +99,22 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     }
 
     final overflowTop = style.top - menuPositionAndSize.height;
-    final hasOverflowTop = overflowTop - overflowWidth < 0;
+    final hasOverflowTop = overflowTop < 0;
     if (hasOverflowTop) {
       style.top = triggerPositionAndSize.height;
     }
 
-    final windowHeight = window.physicalSize.height;
+    final windowHeight = MediaQuery.of(context).size.height;
     final overflowBottom =
         windowHeight - (style.top + menuPositionAndSize.height);
-    final hasOverflowBottom = overflowBottom - overflowWidth < 0;
 
+    final hasOverflowBottom = overflowBottom < 0;
     if (hasOverflowBottom) {
       style.top = (triggerPositionAndSize.top -
           menuPositionAndSize.height -
           offset * 2);
-      ;
     }
+
     return style;
   }
 

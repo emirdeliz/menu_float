@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 // ignore: avoid_relative_lib_imports
-import '../example/menu_float_demo/lib/menu_float_app.dart';
+import '../example/lib/menu_float_example.dart';
 
-const String titleWidgetTrigger = 'Click me';
+const String titleWidgetTrigger = 'Button target';
 const String titleOptionMenu = 'Mobile phone';
 const double landscapeWidth = 1024;
 const double landscapeHeight = 768;
-
-Widget makeTriggerButton() {
-  return ElevatedButton(
-      onPressed: () => {}, child: const Text(titleWidgetTrigger));
-}
 
 void setWindowSize(Size size) {
   TestWidgetsFlutterBinding binding =
@@ -23,7 +18,7 @@ void setWindowSize(Size size) {
 Future<void> initializeAndTapAtPosition(
     WidgetTester tester, double x, double y, double tapX, double tapY) async {
   setWindowSize(const Size(landscapeWidth, landscapeHeight));
-  await tester.pumpWidget(MenuFloatAppTest(x: x, y: y));
+  await tester.pumpWidget(MenuFloatExampleTest(x: x, y: y));
   await tester.pumpAndSettle();
 
   await tester.tapAt(Offset(tapX, tapY));
@@ -32,7 +27,7 @@ Future<void> initializeAndTapAtPosition(
 }
 
 void main() {
-  group('menu float: with y = 0', () {
+  group('menu float bottom: with y = 0', () {
     testWidgets('have menu for the button on top-left', (tester) async {
       TestWidgetsFlutterBinding.ensureInitialized();
       await initializeAndTapAtPosition(tester, 0, 0, 40, 15);
@@ -104,10 +99,10 @@ void main() {
     });
   });
 
-  group('menu float top: with y = 0', () {
+  group('menu float top: with y = 730', () {
     testWidgets('have menu for the button on bottom-left', (tester) async {
       TestWidgetsFlutterBinding.ensureInitialized();
-      await initializeAndTapAtPosition(tester, 0, 730, 40, 745);
+      await initializeAndTapAtPosition(tester, 0, 730, 40, 730);
 
       final menu = find.text(titleOptionMenu);
       expect(menu, findsOneWidget);
@@ -117,8 +112,8 @@ void main() {
       expect(find.text(titleOptionMenu), findsOneWidget);
     });
 
-    testWidgets('have menu for the button on bottom-left', (tester) async {
-      await initializeAndTapAtPosition(tester, 500, 730, 515, 745);
+    testWidgets('have menu for the button on bottom-center', (tester) async {
+      await initializeAndTapAtPosition(tester, 500, 730, 515, 730);
 
       final menu = find.text(titleOptionMenu);
       expect(menu, findsOneWidget);
@@ -128,8 +123,8 @@ void main() {
       expect(find.text(titleOptionMenu), findsOneWidget);
     });
 
-    testWidgets('have menu for the button on bottom-left', (tester) async {
-      await initializeAndTapAtPosition(tester, 930, 730, 945, 745);
+    testWidgets('have menu for the button on bottom-right', (tester) async {
+      await initializeAndTapAtPosition(tester, 935, 730, 945, 730);
 
       final menu = find.text(titleOptionMenu);
       expect(menu, findsOneWidget);

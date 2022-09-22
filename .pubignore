@@ -1,0 +1,5 @@
+.DS_Store
+.history
+.flutter-plugins
+.flutter-plugins-dependencies
+.dart_tool/

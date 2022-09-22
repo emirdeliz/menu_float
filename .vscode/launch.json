@@ -8,7 +8,7 @@
 				"name": "Menu Float (example)",
 				"request": "launch",
 				"type": "dart",
-				"cwd": "example/menu_float_demo",
+				"cwd": "example",
 				"args": [
 					"--web-port=9191",
 					"--web-hostname=0.0.0.0",
