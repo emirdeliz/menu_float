@@ -4,6 +4,7 @@ import '__mock__/menu_float.mock.dart';
 
 const String titleWidgetTrigger = 'Button target';
 
+/// A widget that is used to test the MenuFloat widget.
 class MenuFloatExampleTest extends StatelessWidget {
   final bool top;
   final bool left;
@@ -35,6 +36,7 @@ class MenuFloatExampleTest extends StatelessWidget {
   }
 }
 
+/// `MenuFloatExampleTestPage` is a `StatefulWidget` that creates a `MenuFloatExampleTestPageState`
 class MenuFloatExampleTestPage extends StatefulWidget {
   final bool top;
   final bool left;
@@ -59,6 +61,8 @@ class MenuFloatExampleTestPage extends StatefulWidget {
 class _MenuFloatExampleTestPageState extends State<MenuFloatExampleTestPage> {
   String? selectedValue;
 
+  /// It returns a list of MenuFloatOption objects, each of which has a title, a subtitle, and a
+  /// callback function
   List<MenuFloatOption<Product>> makeMenuOptions() {
     final menusOptions = productMock.map<MenuFloatOption<Product>>((e) {
       return MenuFloatOption<Product>(
@@ -74,6 +78,7 @@ class _MenuFloatExampleTestPageState extends State<MenuFloatExampleTestPage> {
     return menusOptions;
   }
 
+  /// It returns a widget that, when tapped, triggers a Dart function
   Widget makeTriggerButton() {
     return ElevatedButton(
         onPressed: () => {}, child: Text(selectedValue ?? titleWidgetTrigger));

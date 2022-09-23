@@ -32,6 +32,7 @@ class MenuFloatExampleDemo extends StatelessWidget {
   }
 }
 
+/// This class is a stateless widget that creates a menu float button
 class MenuFloatDemo extends StatelessWidget {
   const MenuFloatDemo({Key? key}) : super(key: key);
 

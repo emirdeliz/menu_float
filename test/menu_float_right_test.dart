@@ -1,30 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-// ignore: avoid_relative_lib_imports
-import '../example/lib/menu_float_example.dart';
+import 'menu_float_utils.dart';
 
 const String titleWidgetTrigger = 'Button target';
 const String titleOptionMenu = 'Mobile phone';
 const double landscapeWidth = 1024;
 const double landscapeHeight = 768;
-
-void setWindowSize(Size size) {
-  TestWidgetsFlutterBinding binding =
-      TestWidgetsFlutterBinding.ensureInitialized();
-  binding.window.physicalSizeTestValue = size;
-  binding.window.devicePixelRatioTestValue = 1.0;
-}
-
-Future<void> initializeAndTapAtPosition(
-    WidgetTester tester, double x, double y, double tapX, double tapY) async {
-  setWindowSize(const Size(landscapeWidth, landscapeHeight));
-  await tester.pumpWidget(MenuFloatExampleTest(x: x, y: y, right: true));
-  await tester.pumpAndSettle();
-
-  await tester.tapAt(Offset(tapX, tapY));
-  await tester.pumpAndSettle(const Duration(seconds: 3));
-  await tester.pump(const Duration(seconds: 3));
-}
 
 void main() {
   group('menu float right: with y = 0', () {

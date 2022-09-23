@@ -21,8 +21,6 @@ class MenuFloatItem<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.centerLeft,
-      // decoration: BoxDecoration(
-      //     color: Colors.white, border: Border.all(color: Colors.red)),
       child: option.label,
     );
   }
