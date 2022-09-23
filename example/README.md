@@ -1,4 +1,4 @@
-# menu_float_demo
+# menu_float_example
 
 A new Flutter project.
 
