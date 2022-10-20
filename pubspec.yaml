@@ -1,6 +1,6 @@
 name: menu_float
 description: A menu float package to use on menu like tooltip, dropdown and etc.
-version: 0.0.12
+version: 0.0.13
 homepage: https://github.com/emirdeliz/menu_float
 
 environment:

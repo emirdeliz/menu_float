@@ -268,10 +268,8 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
                   });
                 }
               },
-              child: Container(
-                decoration:
-                    BoxDecoration(border: Border.all(color: Colors.red)),
-                margin: EdgeInsets.only(
+              child: Padding(
+                padding: EdgeInsets.only(
                   top: widget.offsetTop ?? 0,
                   bottom: widget.offsetBottom ?? 0,
                   left: widget.offsetLeft ?? 0,
