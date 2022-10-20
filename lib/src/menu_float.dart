@@ -28,21 +28,25 @@ class MenuFloat<T> extends StatefulWidget {
   final Widget child;
   final List<MenuFloatOption<T>> items;
   final double? offsetTop;
+  final double? offsetBottom;
   final double? offsetLeft;
+  final double? offsetRight;
   final bool top;
   final bool left;
   final bool right;
 
-  const MenuFloat(
-      {Key? key,
-      this.top = false,
-      this.left = false,
-      this.right = false,
-      this.offsetTop = 0,
-      this.offsetLeft = 0,
-      required this.child,
-      required this.items})
-      : super(key: key);
+  const MenuFloat({
+    Key? key,
+    this.top = false,
+    this.left = false,
+    this.right = false,
+    this.offsetTop = 0,
+    this.offsetLeft = 0,
+    this.offsetBottom,
+    this.offsetRight,
+    required this.child,
+    required this.items,
+  }) : super(key: key);
 
   @override
   State<MenuFloat> createState() => _MenuFloatState<T>();
@@ -207,8 +211,6 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
     /// If true this means that the menu will be cut after opens.
     /// To fix this the method calc a new position considering to point in the other direction.
     final styleOverflow = _maybeCheckAndFixOverflow(style);
-    styleOverflow.top = styleOverflow.top + (widget.offsetTop ?? 0);
-    styleOverflow.left = styleOverflow.left + (widget.offsetLeft ?? 0);
     return styleOverflow;
   }
 
@@ -248,25 +250,36 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
         maintainState: true,
         builder: (context) {
           return Positioned(
-              left: floatPosition?.left,
-              top: floatPosition?.top,
-              child: MouseRegion(
-                  onExit: (PointerExitEvent e) {
-                    if (mounted) {
-                      setState(() {
-                        hasMenuFocus = false;
-                      });
-                      _hideMenu();
-                    }
-                  },
-                  onEnter: (PointerEnterEvent e) {
-                    if (mounted) {
-                      setState(() {
-                        hasMenuFocus = true;
-                      });
-                    }
-                  },
-                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+            left: floatPosition?.left,
+            top: floatPosition?.top,
+            child: MouseRegion(
+              onExit: (PointerExitEvent e) {
+                if (mounted) {
+                  setState(() {
+                    hasMenuFocus = false;
+                  });
+                  _hideMenu();
+                }
+              },
+              onEnter: (PointerEnterEvent e) {
+                if (mounted) {
+                  setState(() {
+                    hasMenuFocus = true;
+                  });
+                }
+              },
+              child: Container(
+                decoration:
+                    BoxDecoration(border: Border.all(color: Colors.red)),
+                margin: EdgeInsets.only(
+                  top: widget.offsetTop ?? 0,
+                  bottom: widget.offsetBottom ?? 0,
+                  left: widget.offsetLeft ?? 0,
+                  right: widget.offsetRight ?? 0,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                     Opacity(
                       opacity: floatPosition != null ? 1 : 0,
                       child: Container(
@@ -274,8 +287,9 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
                           // height: floatPosition != null ? null : 0,
                           key: menuKey,
                           constraints: const BoxConstraints(
-                              maxWidth: menuFloatMaxWidth,
-                              maxHeight: menuFloatMaxHeight),
+                            maxWidth: menuFloatMaxWidth,
+                            maxHeight: menuFloatMaxHeight,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.white24,
                             borderRadius: BorderRadius.circular(4),
@@ -294,7 +308,11 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
                             children: _buildMenuFloatItems(),
                           ))),
                     )
-                  ])));
+                  ],
+                ),
+              ),
+            ),
+          );
         });
     overlayState?.insert(entry!);
 
