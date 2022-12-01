@@ -81,8 +81,12 @@ class _MenuFloatState<T> extends State<MenuFloat<T>>
   /// Returns a MenuFloatIdealPosition.
   MenuFloatIdealPosition _getWidgetPositionAndSizeRelativeToWindow(
       BuildContext? menuKeyContext) {
+    final navigator = Navigator.of(context);
     final RenderBox renderBox = menuKeyContext?.findRenderObject() as RenderBox;
-    final position = renderBox.localToGlobal(Offset.zero);
+    final position = renderBox.localToGlobal(
+      Offset.zero, 
+      ancestor: navigator.context.findRenderObject(),
+    );
     final double top = position.dy;
     final double left = position.dx;
     final double width = renderBox.size.width;
